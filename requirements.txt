@@ -1,0 +1,7 @@
+python-dotenv
+reedsolo
+opencv-python
+hmap
+hashlib
+numpy
+zlib
