@@ -1,0 +1,31 @@
+from dotenv import load_dotenv
+import os
+from queue import Queue
+
+load_dotenv(
+    dotenv_path=os.path.join(os.path.dirname(__file__), ".env"),
+    verbose=True,
+    override=False,
+)
+
+EARTH_BASE_IP = os.getenv("EARTH_BASE_IP")
+LOCAL_IP = os.getenv("LOCAL_IP")
+
+EARTH_SEND_DATA_PORT = int(os.getenv("EARTH_SEND_DATA_PORT"))
+EARTH_RECEIVE_CMD_PORT = int(os.getenv("EARTH_RECEIVE_CMD_PORT"))
+VIDEO_PORT = int(os.getenv("VIDEO_PORT"))
+VIDEO_PATH = os.path.join(os.path.dirname(__file__), "Video.mp4")
+
+command_queue = Queue()
+message_type = "Type"
+message_data = "Data"
+ack = "ACK"
+cmd = "CMD"
+video = "VID"
+sens = "SENS"
+temperature = "Temperature"
+
+video_queue = Queue()
+video_1 = "video_1"
+video_2 = "video_2"
+video_3 = "video_3"
