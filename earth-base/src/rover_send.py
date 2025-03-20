@@ -41,7 +41,9 @@ def send_data_to_rover(send_socket):
                         (LUNAR_ROVER_1_IP, LUNAR_ROVER_SEND_DATA_PORT),
                     )
 
-                    print(f"[EARTH COMM - OUTGOING] Attempt {attempt} Sent: {CMD_data}")
+                    print(
+                        f"[EARTH COMM - OUTGOING] Attempt {attempt} Sent: {CMD_data} {packed_data}"
+                    )
 
                     try:
                         print(f"[ROVER to Earth - OUTGOING] Sent: {CMD_data}")

@@ -8,13 +8,13 @@ from utils.prevent_corruption import (
 )
 
 
-def make_packet(seq_num, data):
+def make_packet(timestamp, data):
     try:
         hmac_value = generate_hmac(data)
         data_with_hmac = data + hmac_value
         compressed_data = compress_data(data_with_hmac)
         encoded_data = encode_data(compressed_data)
-        packet = struct.pack("!I", seq_num) + encoded_data
+        packet = struct.pack("!I", timestamp) + encoded_data
         return packet
     except struct.error as e:
         print(f"[ERROR make_packet] Failed to pack sequence number: {e}")
@@ -30,36 +30,40 @@ def parse_packet(packet):
             print("[ERROR parse_packet] Incomplete packet received.")
             return None, None
 
-        seq_num = struct.unpack("!I", packet[:4])[0]
+        timestamp = struct.unpack("!I", packet[:4])[0]
         encoded_data = packet[4:]
 
         try:
             decoded_bytes = decode_data(encoded_data)
             if decoded_bytes is None:
                 print(
-                    f"[ERROR decode_data] Failed to decode packet {seq_num}. Possible corruption!"
+                    f"[ERROR decode_data] Failed to decode packet {timestamp}. Possible corruption!"
                 )
-                return seq_num, None
+                return timestamp, None
         except Exception as e:
-            print(f"[ERROR decode_data] Exception while decoding packet {seq_num}: {e}")
-            return seq_num, None
+            print(
+                f"[ERROR decode_data] Exception while decoding packet {timestamp}: {e}"
+            )
+            return timestamp, None
 
         try:
             decompressed_data = decompress_data(decoded_bytes)
             if decompressed_data is None:
-                print(f"[ERROR decompress_data] Failed to decompress packet {seq_num}.")
-                return seq_num, None
+                print(
+                    f"[ERROR decompress_data] Failed to decompress packet {timestamp}."
+                )
+                return timestamp, None
         except Exception as e:
             print(
-                f"[ERROR decompress_data] Exception while decompressing packet {seq_num}: {e}"
+                f"[ERROR decompress_data] Exception while decompressing packet {timestamp}: {e}"
             )
-            return seq_num, None
+            return timestamp, None
 
         if len(decompressed_data) < 32:
             print(
-                f"[ERROR parse_packet] Packet {seq_num} is too short to contain a valid HMAC."
+                f"[ERROR parse_packet] Packet {timestamp} is too short to contain a valid HMAC."
             )
-            return seq_num, None
+            return timestamp, None
 
         # Extract original data and HMAC
         original_data = decompressed_data[:-32]
@@ -68,17 +72,17 @@ def parse_packet(packet):
         try:
             if not verify_hmac(original_data, received_hmac):
                 print(
-                    f"[ERROR verify_hmac] HMAC verification failed for packet {seq_num}. Possible tampering detected!"
+                    f"[ERROR verify_hmac] HMAC verification failed for packet {timestamp}. Possible tampering detected!"
                 )
-                return seq_num, None
+                return timestamp, None
         except Exception as e:
             print(
-                f"[ERROR verify_hmac] Exception during HMAC verification for packet {seq_num}: {e}"
+                f"[ERROR verify_hmac] Exception during HMAC verification for packet {timestamp}: {e}"
             )
-            return seq_num, None
+            return timestamp, None
 
-        print(f"[SUCCESS] Packet {seq_num} successfully received and verified.")
-        return seq_num, original_data
+        print(f"[SUCCESS] Packet {timestamp} successfully received and verified.")
+        return timestamp, original_data
     except struct.error as e:
         print(f"[ERROR parse_packet] Failed to unpack sequence number: {e}")
         return None, None

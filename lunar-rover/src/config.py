@@ -13,8 +13,13 @@ LOCAL_IP = os.getenv("LOCAL_IP")
 
 EARTH_SEND_DATA_PORT = int(os.getenv("EARTH_SEND_DATA_PORT"))
 EARTH_RECEIVE_CMD_PORT = int(os.getenv("EARTH_RECEIVE_CMD_PORT"))
-VIDEO_PORT = int(os.getenv("VIDEO_PORT"))
+EARTH_RECIEVE_VIDEO_PORT = int(os.getenv("EARTH_RECIEVE_VIDEO_PORT"))
 VIDEO_PATH = os.path.join(os.path.dirname(__file__), "Video.mp4")
+SEND_VIDEO_PORT = int(os.getenv("SEND_VIDEO_PORT"))
+
+wait_time = 10
+retries = 3
+nf_queue_run = 1
 
 command_queue = Queue()
 message_type = "Type"

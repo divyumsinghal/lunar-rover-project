@@ -31,7 +31,9 @@ def receive_data_from_earth(recv_socket):
                     message_data: f"Received {recieved_type}",
                 }
 
-                print(f"Message received: {recieved_type}, sending Ack: {ack_message}")
+                print(
+                    f"Message received: {recieved_type}, sending Ack: {ack_message} to {addr}"
+                )
 
                 packed_ack = msgpack.packb(ack_message, use_bin_type=True)
                 secure_send(seq_num, recv_socket, packed_ack, addr)

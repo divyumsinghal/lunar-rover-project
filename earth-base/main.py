@@ -9,12 +9,14 @@ from utils.simulate import process_packet_in_the_channel
 from netfilterqueue import NetfilterQueue
 
 send_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+send_socket.bind((LOCAL_IP, EARTH_BASE_SEND_CMD_PORT))
 
 recv_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 recv_socket.bind((LOCAL_IP, EARTH_RECEIVE_CMD_PORT))
 
 video_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 video_socket.bind((LOCAL_IP, VIDEO_PORT))
+video_socket.connect((LUNAR_ROVER_1_IP, LUNAR_ROVER_RECIEVE_VIDEO_PORT))
 
 stop_event = threading.Event()
 
@@ -34,9 +36,9 @@ def main():
         target=send_data_to_rover, args=(send_socket,), daemon=True
     ).start()
 
-    threading.Thread(
-        target=receive_video_from_rover, args=(send_socket,), daemon=True
-    ).start()
+    # threading.Thread(
+    #     target=receive_video_from_rover, args=(send_socket,), daemon=True
+    # ).start()
 
     start_gui(command_queue=command_queue, video_queue=video_queue)
 
