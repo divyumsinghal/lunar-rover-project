@@ -1,14 +1,20 @@
 from utils.make_packet import make_packet, parse_packet
+from utils.simulate import simulate_channel
+import socket
 
 
 def secure_send(seq_num, sock, data, addr):
-    packet = make_packet(seq_num, data)
-    sent = False
-
     try:
+        packet = make_packet(seq_num, data)
+        packet = simulate_channel(packet)
         sock.sendto(packet, addr)
+
+    except socket.timeout:
+        print("[ERROR secure_send] Timeout while sending data.")
+    except socket.error as e:
+        print(f"[ERROR secure_send] Socket error while sending data: {e}")
     except Exception as e:
-        print("[ERROR secure_send] Exception while sending data:", e)
+        print(f"[ERROR secure_send] Unexpected error while sending data: {e}")
 
 
 def secure_receive(sock):
@@ -21,6 +27,12 @@ def secure_receive(sock):
         else:
             print(f"[ERROR secure_receive] Failed to decode packet {seq_num}.")
             return None, None, addr
+    except socket.timeout:
+        print("[ERROR secure_receive] Timeout while receiving data.")
+        return None, None, None
+    except socket.error as e:
+        print(f"[ERROR secure_receive] Socket error while receiving data: {e}")
+        return None, None, None
     except Exception as e:
-        print("[ERROR secure_receive] Exception while receiving data:", e)
+        print(f"[ERROR secure_receive] Unexpected error while receiving data: {e}")
         return None, None, None

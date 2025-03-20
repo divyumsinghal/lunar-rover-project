@@ -15,6 +15,10 @@ LUNAR_ROVER_SEND_DATA_PORT = int(os.getenv("LUNAR_ROVER_SEND_DATA_PORT"))
 EARTH_RECEIVE_CMD_PORT = int(os.getenv("LUNAR_ROVER_RECEIVE_CMD_PORT"))
 VIDEO_PORT = int(os.getenv("VIDEO_PORT"))
 
+wait_time = 10
+retries = 3
+nf_queue_run = 1
+
 command_queue = Queue()
 message_type = "Type"
 message_data = "Data"

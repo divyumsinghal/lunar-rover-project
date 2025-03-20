@@ -1,0 +1,25 @@
+{
+  "delay": {
+    "mean": 2.7,
+    "std": 0.2,
+    "min": 2.5
+  },
+  "jitter": {
+    "mean": 0.1,
+    "std": 0.05
+  },
+  "packet_loss": {
+    "mean": 0.05,
+    "std": 0.01
+  },
+  "awgn": {
+    "snr_db": 10
+  },
+  "distortion": {
+    "mean": 0,
+    "std": 0.01
+  },
+  "bit_error": {
+    "mean": 0.000001
+  }
+}

@@ -30,11 +30,10 @@ def send_data_to_earth(send_socket):
                     print(f"[ERROR send_data_to_earth] Invalid command: {command}")
                     continue
 
-                send_socket.settimeout(2)
-
-                retries = 3
+                send_socket.settimeout(wait_time)
 
                 for attempt in range(retries):
+                    attempt += 1
                     seq_num = random.randint(1, 1000000)
                     packed_data = msgpack.packb(sensor_data, use_bin_type=True)
 
@@ -46,7 +45,7 @@ def send_data_to_earth(send_socket):
                     )
 
                     print(
-                        f"[EARTH COMM - OUTGOING] Attempt {attempt + 1} Sent: {sensor_data}"
+                        f"[EARTH COMM - OUTGOING] Attempt {attempt} Sent: {sensor_data}"
                     )
 
                     try:
