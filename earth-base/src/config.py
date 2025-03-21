@@ -31,6 +31,11 @@ video = "VID"
 sens = "SENS"
 temperature = "Temperature"
 
+# Message type identifiers for packet filtering
+MSG_TYPE_COMMAND = 1
+MSG_TYPE_ACK = 2
+MSG_TYPE_VIDEO = 3
+MSG_TYPE_SENSOR = 4
 
 video_queue = Queue()
 video_1 = "video_1"

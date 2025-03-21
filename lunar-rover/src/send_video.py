@@ -13,6 +13,10 @@ def send_video_to_earth(send_socket):
     print(f"[DEBUG] Earth BASE IP: {EARTH_BASE_IP}")
     print(f"[DEBUG] Earth RECEIVE VIDEO PORT: {EARTH_RECIEVE_VIDEO_PORT}")
 
+    print("[DEBUG] Video socket details:")
+    print(f"[DEBUG] - Local socket: {send_socket.getsockname()}")
+    print(f"[DEBUG] - Destination: {EARTH_BASE_IP}:{EARTH_RECIEVE_VIDEO_PORT}")
+
     while True:
         if not video_queue.empty():
             try:
@@ -105,11 +109,28 @@ def send_video_to_earth(send_socket):
                                     print(
                                         f"[DEBUG] Sending frame {i+1} to {destination}, size: {frame_size} bytes"
                                     )
+
+                                    # Send a test packet to verify connectivity
+                                    try:
+                                        test_message = b"VIDEO_CONNECTION_TEST"
+                                        send_socket.sendto(
+                                            test_message,
+                                            (EARTH_BASE_IP, EARTH_RECIEVE_VIDEO_PORT),
+                                        )
+                                        print(
+                                            f"[DEBUG] Sent test packet to Earth Base at {EARTH_BASE_IP}:{EARTH_RECIEVE_VIDEO_PORT}"
+                                        )
+                                    except Exception as e:
+                                        print(
+                                            f"[ERROR] Failed to send test packet: {e}"
+                                        )
+
                                     secure_send(
                                         frames_sent,
                                         send_socket,
                                         frame_data,
                                         destination,
+                                        packet_type=MSG_TYPE_VIDEO,  # Specify that this is a video packet
                                     )
                                     frames_sent += 1
 

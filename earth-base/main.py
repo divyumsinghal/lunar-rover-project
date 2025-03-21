@@ -9,15 +9,25 @@ from utils.simulate import process_packet_in_the_channel
 from netfilterqueue import NetfilterQueue
 from src.video_player import video_playback
 
+print(f"[INFO] Starting Earth Base with configuration:")
+print(f"[INFO] - Local IP: {LOCAL_IP}")
+print(f"[INFO] - Rover IP: {LUNAR_ROVER_1_IP}")
+print(f"[INFO] - Command receive port: {EARTH_RECEIVE_CMD_PORT}")
+print(f"[INFO] - Video receive port: {VIDEO_PORT}")
+
 send_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 send_socket.bind((LOCAL_IP, EARTH_BASE_SEND_CMD_PORT))
+print(f"[INFO] Command send socket bound to {send_socket.getsockname()}")
 
 recv_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 recv_socket.bind((LOCAL_IP, EARTH_RECEIVE_CMD_PORT))
+print(f"[INFO] Command receive socket bound to {recv_socket.getsockname()}")
 
 video_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 video_socket.bind((LOCAL_IP, VIDEO_PORT))
-video_socket.connect((LUNAR_ROVER_1_IP, LUNAR_ROVER_RECIEVE_VIDEO_PORT))
+print(f"[INFO] Video receive socket bound to {video_socket.getsockname()}")
+# Remove this line - it's causing issues with receiving video:
+# video_socket.connect((LUNAR_ROVER_1_IP, LUNAR_ROVER_RECIEVE_VIDEO_PORT))
 
 stop_event = threading.Event()
 
@@ -37,8 +47,9 @@ def main():
         target=send_data_to_rover, args=(send_socket,), daemon=True
     ).start()
 
+    # Fix: Use video_socket instead of send_socket for receiving video
     threading.Thread(
-        target=receive_video_from_rover, args=(send_socket,), daemon=True
+        target=receive_video_from_rover, args=(video_socket,), daemon=True
     ).start()
 
     threading.Thread(target=video_playback, daemon=True).start()

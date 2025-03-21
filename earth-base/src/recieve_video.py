@@ -2,6 +2,7 @@ import struct
 import cv2
 import numpy as np
 import time
+import socket
 from src.config import *
 from utils.client_server_comm import secure_receive
 
@@ -9,6 +10,22 @@ from utils.client_server_comm import secure_receive
 def receive_video_from_rover(recv_socket):
     print(f"[EARTH - RECEIVE] Listening for video on port {VIDEO_PORT}")
     print(f"[DEBUG] Video receive socket: {recv_socket.getsockname()}")
+
+    # Add a simple raw receive test
+    print("[DEBUG] Testing raw packet receive before entering main loop...")
+    try:
+        # Set a shorter timeout for this test
+        recv_socket.settimeout(5)
+        test_data, addr = recv_socket.recvfrom(4096)
+        print(f"[DEBUG] Received raw test packet: {test_data} from {addr}")
+        # Reset timeout to None (blocking mode) for normal operation
+        recv_socket.settimeout(None)
+    except socket.timeout:
+        print("[WARNING] No test packets received within timeout")
+        recv_socket.settimeout(None)
+    except Exception as e:
+        print(f"[ERROR] Error during test receive: {e}")
+        recv_socket.settimeout(None)
 
     print("[INFO] Waiting for video request to be sent to rover...")
     while not asked_for_video:
@@ -25,9 +42,30 @@ def receive_video_from_rover(recv_socket):
     try:
         while True:
             try:
-                # Receive the frame data
+                # Receive the frame data with packet type filtering
                 receipt_time = time.time()
-                timestamp, frame_data, addr = secure_receive(recv_socket)
+
+                # First check if it's a raw direct message
+                try:
+                    recv_socket.settimeout(0.5)  # Brief timeout for checking
+                    raw_data, addr = recv_socket.recvfrom(65536)
+
+                    # Check if this might be a test packet
+                    if raw_data.startswith(b"VIDEO_CONNECTION_TEST"):
+                        print(f"[DEBUG] Received video test packet from {addr}")
+                        continue
+
+                    # Process through secure_receive to handle video frames
+                    recv_socket.settimeout(None)
+                    timestamp, frame_data, addr = secure_receive(
+                        recv_socket, packet_type=MSG_TYPE_VIDEO
+                    )
+                except socket.timeout:
+                    # No raw packets, try regular secure receive
+                    recv_socket.settimeout(None)
+                    timestamp, frame_data, addr = secure_receive(
+                        recv_socket, packet_type=MSG_TYPE_VIDEO
+                    )
 
                 if timestamp is not None and frame_data is not None:
                     # Successfully received frame
