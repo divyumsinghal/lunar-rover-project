@@ -7,6 +7,7 @@ from src.recieve_video import receive_video_from_rover
 from src.config import *
 from utils.simulate import process_packet_in_the_channel
 from netfilterqueue import NetfilterQueue
+from src.video_player import video_playback
 
 send_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 send_socket.bind((LOCAL_IP, EARTH_BASE_SEND_CMD_PORT))
@@ -36,9 +37,11 @@ def main():
         target=send_data_to_rover, args=(send_socket,), daemon=True
     ).start()
 
-    # threading.Thread(
-    #     target=receive_video_from_rover, args=(send_socket,), daemon=True
-    # ).start()
+    threading.Thread(
+        target=receive_video_from_rover, args=(send_socket,), daemon=True
+    ).start()
+
+    threading.Thread(target=video_playback, daemon=True).start()
 
     start_gui(command_queue=command_queue, video_queue=video_queue)
 

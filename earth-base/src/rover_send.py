@@ -26,6 +26,7 @@ def send_data_to_rover(send_socket):
                     print(f"[EARTH - send_data_to_rover] VIDEO Queue: {command}")
                     CMD_data = {message_type: video}
                     CMD_data.update({message_data: command})
+                    asked_for_video = True
 
                 send_socket.settimeout(wait_time)
 

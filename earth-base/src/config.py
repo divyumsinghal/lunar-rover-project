@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-from queue import Queue
+from queue import Queue, PriorityQueue
 
 load_dotenv(
     dotenv_path=os.path.join(os.path.dirname(__file__), ".env"),
@@ -20,6 +20,7 @@ LUNAR_ROVER_RECIEVE_VIDEO_PORT = int(os.getenv("LUNAR_ROVER_RECIEVE_VIDEO_PORT")
 wait_time = 10
 retries = 3
 nf_queue_run = 1
+FRAME_RATE = 30
 
 command_queue = Queue()
 message_type = "Type"
@@ -35,3 +36,5 @@ video_queue = Queue()
 video_1 = "video_1"
 video_2 = "video_2"
 video_3 = "video_3"
+frame_queue = PriorityQueue()
+asked_for_video = False
