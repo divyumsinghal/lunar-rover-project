@@ -5,6 +5,7 @@ import time
 import socket
 from src.config import *
 from utils.client_server_comm import secure_receive
+import src.config as config
 
 
 def receive_video_from_rover(recv_socket):
@@ -28,7 +29,7 @@ def receive_video_from_rover(recv_socket):
         recv_socket.settimeout(None)
 
     print("[INFO] Waiting for video request to be sent to rover...")
-    while not asked_for_video:
+    while not config.asked_for_video:
         time.sleep(0.5)
 
     print("[INFO] Video request has been sent to rover, starting to receive frames")

@@ -4,6 +4,7 @@ import time
 import random
 from src.config import *
 from utils.client_server_comm import secure_receive, secure_send
+import src.config as config
 
 
 def send_data_to_rover(send_socket):
@@ -26,7 +27,7 @@ def send_data_to_rover(send_socket):
                     print(f"[EARTH - send_data_to_rover] VIDEO Queue: {command}")
                     CMD_data = {message_type: video}
                     CMD_data.update({message_data: command})
-                    asked_for_video = True
+                    config.asked_for_video = True
 
                 send_socket.settimeout(wait_time)
 
