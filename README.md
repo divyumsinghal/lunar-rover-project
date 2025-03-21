@@ -1,12 +1,8 @@
 # lunar-rover-project
 
-## Client - Server Flow
+cd into earth-base:
 
-1. Prepare Data:
-   ➤ Add sequence number → Compress → Encrypt
-2. Add Integrity Checks:
-   ➤ Generate CRC checksum → Append HMAC
-3. Transmit:
-   ➤ Send packet via UDP
-4. On Receiving Side:
-   ➤ Verify HMAC → Decrypt → Decompress → Verify Checksum → Process Data
+```
+docker build -t name .
+docker run -it --rm -p 5000:5000 name
+```
