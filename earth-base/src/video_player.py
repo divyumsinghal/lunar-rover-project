@@ -74,14 +74,6 @@ def video_playback():
                     else:
                         recent_fps = 0
 
-                    print(f"[INFO] Playback statistics:")
-                    print(f"[INFO] - Queue size: {queue_size} frames")
-                    print(f"[INFO] - Frames displayed: {frames_displayed}")
-                    print(f"[INFO] - Frames dropped: {frames_dropped}")
-                    print(f"[INFO] - Recent FPS: {recent_fps:.2f}")
-                    print(f"[INFO] - Average FPS: {avg_fps:.2f}")
-                    print(f"[INFO] - Buffer health: {queue_size/FRAME_RATE:.2f}s")
-
                     # Reset for next period
                     last_report_time = current_time
                     frame_times = []

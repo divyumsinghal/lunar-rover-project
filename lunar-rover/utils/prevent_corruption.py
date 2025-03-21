@@ -2,7 +2,7 @@ import reedsolo
 import hmac
 import hashlib
 
-rs = reedsolo.RSCodec(20)
+rs = reedsolo.RSCodec(100)
 
 SECRET_KEY = b"SUPER_SECRET_ROVER_KEY"
 
