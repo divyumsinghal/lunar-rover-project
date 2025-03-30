@@ -27,8 +27,6 @@ print(f"[INFO] Command receive socket bound to {recv_socket.getsockname()}")
 video_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 video_socket.bind((LOCAL_IP, VIDEO_PORT))
 print(f"[INFO] Video receive socket bound to {video_socket.getsockname()}")
-# Remove this line - it's causing issues with receiving video:
-# video_socket.connect((LUNAR_ROVER_1_IP, LUNAR_ROVER_RECIEVE_VIDEO_PORT))
 
 stop_event = threading.Event()
 
@@ -48,7 +46,6 @@ def main():
         target=send_data_to_rover, args=(send_socket,), daemon=True
     ).start()
 
-    # Fix: Use video_socket instead of send_socket for receiving video
     threading.Thread(
         target=receive_video_from_rover, args=(video_socket,), daemon=True
     ).start()

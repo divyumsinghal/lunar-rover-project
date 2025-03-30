@@ -12,6 +12,11 @@ def secure_send(seq_num, sock, data, addr, packet_type=MSG_TYPE_COMMAND):
         )  # Use top 4 bits for type
         packet = make_packet(combined_seq, data)
         packet = simulate_channel(packet)
+
+        if packet is None:
+            print(f"Packet was lost in transmission.")
+            return
+
         sock.sendto(packet, addr)
 
     except socket.timeout:
@@ -24,7 +29,7 @@ def secure_send(seq_num, sock, data, addr, packet_type=MSG_TYPE_COMMAND):
 
 def secure_receive(sock, packet_type=None):
     try:
-        while True:  # Loop until we get a packet of the right type or error out
+        while True:
             packet, addr = sock.recvfrom(65535)
             seq_num, data = parse_packet(packet)
 
@@ -49,9 +54,7 @@ def secure_receive(sock, packet_type=None):
                     print(
                         f"[DEBUG] Ignoring packet of type {received_type}, waiting for type {packet_type}"
                     )
-                    # Continue the loop to wait for the correct packet type
             else:
-                # If seq_num is None, something went wrong with parsing
                 print("[ERROR secure_receive] Failed to parse packet header.")
                 return None, None, addr
 

@@ -107,40 +107,29 @@ def corrupt_packet(packet, block_size=64):
         5: {"mean": 12, "std": 3},  # Very bad: extensive corruption
     }
 
-    # Convert the immutable packet bytes to a mutable bytearray.
     corrupted = bytearray(packet)
-    error_occurred = False
 
-    # Start in state 0 (no corruption).
     current_state = 0
 
-    # Process the packet in blocks.
     for block_start in range(0, len(corrupted), block_size):
         block_end = min(block_start + block_size, len(corrupted))
         block = bytearray(corrupted[block_start:block_end])
         block_length = len(block)
 
-        # If the current state is 0 (no corruption), skip corruption.
         if current_state != 0:
             params = corruption_params[current_state]
-            # Sample the number of bytes to corrupt using a Gaussian distribution.
             block_size_to_corrupt = round(random.gauss(params["mean"], params["std"]))
-            # Clamp to be at least 1 and at most the block length.
             block_size_to_corrupt = max(1, min(block_size_to_corrupt, block_length))
 
-            # Choose a random starting index such that the corruption block fits.
             start_index = random.randint(0, block_length - block_size_to_corrupt)
             for i in range(start_index, start_index + block_size_to_corrupt):
                 block[i] = random.randint(0, 255)
-            error_occurred = True
 
-        # Write the (possibly) corrupted block back into the packet.
         corrupted[block_start:block_end] = block
 
         # Update the channel state using the transition matrix.
         # Get the transition probabilities for the current state.
         probs = transition_matrix[current_state]
-        # Choose the next state using the probabilities.
         current_state = int(np.random.choice(np.arange(6), p=probs))
     else:
         return bytes(corrupted)
@@ -151,8 +140,8 @@ def simulate_channel(packet):
         if random.random() < 0.05:
             return None
 
-        base_simulate_delay()
-        simulate_jitter()
+        # base_simulate_delay()
+        # simulate_jitter()
 
         packet = corrupt_packet(packet)
         packet = super_mario_speedrun_simulator(packet)
@@ -180,7 +169,6 @@ def process_packet_in_the_channel(packet):
         print(
             f"[ERROR process_packet_in_the_channel] Unexpected error during packet processing: {e}"
         )
-        # In case of error, try to accept the packet anyway as a fallback
         try:
             packet.accept()
         except:

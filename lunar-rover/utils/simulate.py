@@ -56,34 +56,7 @@ def super_mario_speedrun_simulator(packet):
 
 
 def corrupt_packet(packet, block_size=64):
-    """
-    Simulate packet corruption using a six-state Markov chain model.
 
-    States:
-      0 - Zero corruption (no corruption)
-      1 - Very good (minimal corruption)
-      2 - Good (low-level corruption)
-      3 - Regular (moderate corruption)
-      4 - Bad (severe corruption)
-      5 - Very bad (extensive corruption, rare)
-
-    The packet is processed in blocks of size 'block_size'. For each block,
-    a corruption block size is drawn from a Gaussian distribution based on the
-    current state's parameters. A contiguous block of bytes (of that size)
-    within the block is then overwritten with random bytes.
-
-    Parameters:
-        packet (bytes): The original packet as a bytes object.
-        drop_on_error (bool): If True, any error causes the packet to be dropped (None returned).
-        block_size (int): The size of each block to process in bytes.
-
-    Returns:
-        bytes or None: The corrupted packet, or None if drop_on_error is True and any corruption occurred.
-    """
-    # Define states as integers: 0, 1, 2, 3, 4, 5.
-    # Define a transition matrix (6x6) for the Markov chain.
-    # Rows: current state, Columns: next state.
-    # The probabilities here are chosen to keep state 5 rare and to model realistic transitions.
     transition_matrix = np.array(
         [
             [0.65, 0.24, 0.105, 0.005, 0.0, 0.0],  # from state 0 (no corruption)
@@ -95,9 +68,6 @@ def corrupt_packet(packet, block_size=64):
         ]
     )
 
-    # Define corruption parameters for states 1 through 5.
-    # State 0 implies no corruption so it is handled separately.
-    # Each entry gives (mean, std) for the block corruption size.
     corruption_params = {
         0: {"mean": 0, "std": 0},  # No corruption
         1: {"mean": 1, "std": 0.5},  # Very good: almost no corruption
@@ -107,40 +77,26 @@ def corrupt_packet(packet, block_size=64):
         5: {"mean": 12, "std": 3},  # Very bad: extensive corruption
     }
 
-    # Convert the immutable packet bytes to a mutable bytearray.
     corrupted = bytearray(packet)
-    error_occurred = False
 
-    # Start in state 0 (no corruption).
     current_state = 0
 
-    # Process the packet in blocks.
     for block_start in range(0, len(corrupted), block_size):
         block_end = min(block_start + block_size, len(corrupted))
         block = bytearray(corrupted[block_start:block_end])
         block_length = len(block)
 
-        # If the current state is 0 (no corruption), skip corruption.
         if current_state != 0:
             params = corruption_params[current_state]
-            # Sample the number of bytes to corrupt using a Gaussian distribution.
             block_size_to_corrupt = round(random.gauss(params["mean"], params["std"]))
-            # Clamp to be at least 1 and at most the block length.
             block_size_to_corrupt = max(1, min(block_size_to_corrupt, block_length))
 
-            # Choose a random starting index such that the corruption block fits.
             start_index = random.randint(0, block_length - block_size_to_corrupt)
             for i in range(start_index, start_index + block_size_to_corrupt):
                 block[i] = random.randint(0, 255)
-            error_occurred = True
 
-        # Write the (possibly) corrupted block back into the packet.
         corrupted[block_start:block_end] = block
-
-        # Update the channel state using the transition matrix.
-        # Get the transition probabilities for the current state.
         probs = transition_matrix[current_state]
-        # Choose the next state using the probabilities.
         current_state = int(np.random.choice(np.arange(6), p=probs))
     else:
         return bytes(corrupted)
@@ -180,7 +136,6 @@ def process_packet_in_the_channel(packet):
         print(
             f"[ERROR process_packet_in_the_channel] Unexpected error during packet processing: {e}"
         )
-        # In case of error, try to accept the packet anyway as a fallback
         try:
             packet.accept()
         except:
