@@ -24,6 +24,7 @@ nf_queue_run = 1
 command_queue = Queue()
 message_type = "Type"
 message_data = "Data"
+invalid_command = "Invalid Command"
 ack = "ACK"
 cmd = "CMD"
 video = "VID"

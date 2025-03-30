@@ -29,7 +29,7 @@ def send_video_to_earth(send_socket):
                         break
 
                     ret, buffer = cv2.imencode(
-                        ".jpg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), 70]
+                        ".jpeg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), 70]
                     )
                     if not ret:
                         continue
@@ -46,6 +46,7 @@ def send_video_to_earth(send_socket):
                             packet_type=MSG_TYPE_VIDEO,
                         )
                         frames_sent += 1
+                        print(f"[ROVER - SEND] Sent frame {frames_sent} to Earth Base")
                     except Exception:
                         continue
 
