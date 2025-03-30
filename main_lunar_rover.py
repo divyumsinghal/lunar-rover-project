@@ -1,9 +1,9 @@
 import threading
 import socket
-from src.config import *
-from src.earth_receive import receive_data_from_earth
-from src.earth_send import send_data_to_earth
-from src.send_video import send_video_to_earth
+from lunar_rover.config import *
+from lunar_rover.earth_receive import receive_data_from_earth
+from lunar_rover.earth_send import send_data_to_earth
+from lunar_rover.send_video import send_video_to_earth
 
 
 send_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

@@ -1,23 +1,26 @@
 from utils.make_packet import make_packet, parse_packet
 from utils.simulate import simulate_channel
 import socket
-from src.config import *
+from utils.config import *
+import asyncio
 
 
-def secure_send(seq_num, sock, data, addr, packet_type=MSG_TYPE_COMMAND):
+async def secure_send(seq_num, sock, data, addr, packet_type=MSG_TYPE_COMMAND):
     try:
         # Add packet type to the sequence number
         combined_seq = (packet_type << 28) | (
             seq_num & 0x0FFFFFFF
         )  # Use top 4 bits for type
         packet = make_packet(combined_seq, data)
-        packet = simulate_channel(packet)
+
+        packet = await simulate_channel(packet)
 
         if packet is None:
             print(f"Packet was lost in transmission.")
             return
 
-        sock.sendto(packet, addr)
+        loop = asyncio.get_running_loop()
+        await loop.run_in_executor(None, lambda: sock.sendto(packet, addr))
 
     except socket.timeout:
         print("[ERROR secure_send] Timeout while sending data.")

@@ -2,6 +2,8 @@ import time
 import random
 import numpy as np
 from scipy.stats import truncnorm
+import asyncio
+
 
 transmission_delay = 1400  # ms
 transmission_delay_base = 1.3
@@ -11,21 +13,21 @@ cosmic_ray_prob = 0.00001
 num_bits_to_flip = 1
 
 
-def simulate_jitter():
+async def simulate_jitter():
     try:
         # delay = np.random.normal(0, transmission_jitter)
         delay = truncnorm.rvs(0, np.inf, loc=jitter_mu, scale=transmission_jitter)
-        time.sleep(delay)
+        await asyncio.sleep(delay)
     except ValueError as e:
         print(f"[ERROR simulate_delay] Invalid parameter for Poisson distribution: {e}")
     except Exception as e:
         print(f"[ERROR simulate_delay] Unexpected error during delay simulation: {e}")
 
 
-def base_simulate_delay():
+async def base_simulate_delay():
     try:
         delay = transmission_delay_base
-        time.sleep(delay)
+        await asyncio.sleep(delay)
     except ValueError as e:
         print(f"[ERROR simulate_delay] Invalid parameter for Poisson distribution: {e}")
     except Exception as e:
@@ -102,16 +104,19 @@ def corrupt_packet(packet, block_size=64):
         return bytes(corrupted)
 
 
-def simulate_channel(packet):
+async def simulate_channel(packet):
     try:
         if random.random() < 0.05:
             return None
 
-        # base_simulate_delay()
-        # simulate_jitter()
+        await base_simulate_delay()
+        await simulate_jitter()
 
-        packet = corrupt_packet(packet)
-        packet = super_mario_speedrun_simulator(packet)
+        loop = asyncio.get_running_loop()
+        packet = await loop.run_in_executor(None, corrupt_packet, packet)
+        packet = await loop.run_in_executor(
+            None, super_mario_speedrun_simulator, packet
+        )
 
         return packet
     except Exception as e:

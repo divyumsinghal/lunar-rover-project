@@ -1,9 +1,7 @@
 import time
-import socket
-import cv2
-from src.config import *
+from earth_base.config import *
 from utils.client_server_comm import secure_receive
-import src.config as config
+import earth_base.config as config
 
 
 def receive_video_from_rover(recv_socket):
@@ -27,7 +25,6 @@ def receive_video_from_rover(recv_socket):
             except Exception as e:
                 print(f"[ERROR] Exception in secure_receive: {e}")
                 frames_dropped += 1
-                time.sleep(0.1)
                 continue
 
             if timestamp is not None and frame_data is not None:

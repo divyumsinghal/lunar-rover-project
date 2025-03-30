@@ -1,5 +1,5 @@
 import msgpack
-from src.config import *
+from lunar_rover.config import *
 from utils.client_server_comm import secure_send, secure_receive
 
 

@@ -1,7 +1,7 @@
 import time
 import cv2
 import os
-from src.config import *
+from lunar_rover.config import *
 from utils.client_server_comm import secure_send
 
 
@@ -48,9 +48,6 @@ def send_video_to_earth(send_socket):
                         frames_sent += 1
                     except Exception:
                         continue
-
-                    if frame_rate > 0:
-                        time.sleep(1.0 / frame_rate)
 
                 cap.release()
             except Exception:

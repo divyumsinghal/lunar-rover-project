@@ -1,8 +1,0 @@
-python-dotenv
-reedsolo
-opencv-python
-hmap
-numpy
-watchfiles
-msgpack
-# netfilterqueue

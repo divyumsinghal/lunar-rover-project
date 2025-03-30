@@ -1,14 +1,15 @@
 import threading
 import socket
-from src.rover_receive import receive_data_from_rover
-from src.rover_send import send_data_to_rover
-from src.get_cmds import start_gui
-from src.recieve_video import receive_video_from_rover
-from src.config import *
-from utils.simulate import process_packet_in_the_channel
+from earth_base.rover_receive import receive_data_from_rover
+from earth_base.rover_send import send_data_to_rover
+from earth_base.get_cmds import start_gui
+from earth_base.recieve_video import receive_video_from_rover
+from earth_base.config import *
+from earth_base.video_player import video_playback
+
+# from utils.simulate import process_packet_in_the_channel
 
 # from netfilterqueue import NetfilterQueue
-from src.video_player import video_playback
 
 print(f"[INFO] Starting Earth Base with configuration:")
 print(f"[INFO] - Local IP: {LOCAL_IP}")

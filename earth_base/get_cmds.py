@@ -1,8 +1,5 @@
 import tkinter as tk
-import queue
-import threading
-import time
-from src.config import *
+from earth_base.config import *
 
 
 def start_gui(command_queue, video_queue):

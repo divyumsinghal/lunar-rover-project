@@ -1,5 +1,5 @@
 import msgpack
-from src.config import *
+from earth_base.config import *
 from utils.client_server_comm import secure_send, secure_receive
 
 

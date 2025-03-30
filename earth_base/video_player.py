@@ -1,4 +1,4 @@
-from src.config import *
+from earth_base.config import *
 import cv2
 import numpy as np
 import time
