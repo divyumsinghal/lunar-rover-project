@@ -36,7 +36,14 @@ def receive_data_from_earth(recv_socket):
                 )
 
                 packed_ack = msgpack.packb(ack_message, use_bin_type=True)
-                secure_send(seq_num, recv_socket, packed_ack, addr)
+                secure_send(
+                    seq_num=seq_num,
+                    sock=recv_socket,
+                    data=packed_ack,
+                    addr=addr,
+                    packet_type=MSG_TYPE_ACK,
+                    channel=earth_moon,
+                )
 
         except Exception as e:
             print(f"[ERROR receive_data_from_earth] Failed to receive data: {e}")

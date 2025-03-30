@@ -4,10 +4,8 @@ import hashlib
 
 rs = reedsolo.RSCodec(100)
 
-SECRET_KEY = b"SUPER_SECRET_ROVER_KEY"
 
-
-def generate_hmac(data):
+def generate_hmac(data, SECRET_KEY):
     try:
         return hmac.new(SECRET_KEY, data, hashlib.sha256).digest()
     except TypeError as e:
@@ -18,9 +16,9 @@ def generate_hmac(data):
         return None
 
 
-def verify_hmac(data, received_hmac):
+def verify_hmac(data, received_hmac, SECRET_KEY):
     try:
-        calculated_hmac = generate_hmac(data)
+        calculated_hmac = generate_hmac(data, SECRET_KEY)
         if calculated_hmac is None:
             print("[ERROR verify_hmac] Failed to calculate HMAC for verification")
             return False

@@ -3,6 +3,8 @@ import cv2
 import os
 from lunar_rover.config import *
 from utils.client_server_comm import secure_send
+import threading
+from multiprocessing import Process
 
 
 def send_video_to_earth(send_socket):
@@ -35,23 +37,61 @@ def send_video_to_earth(send_socket):
                         continue
 
                     frame_data = buffer.tobytes()
-                    destination = (EARTH_BASE_IP, EARTH_RECIEVE_VIDEO_PORT)
+                    address = (EARTH_BASE_IP, EARTH_RECIEVE_VIDEO_PORT)
 
                     try:
+
+                        """
+                        threading.Thread(
+                            target=secure_send,
+                            args=(
+                                frames_sent,
+                                send_socket,
+                                frame_data,
+                                address,
+                                MSG_TYPE_VIDEO,
+                                earth_moon,
+                            ),
+                        ).start()
+
+
                         secure_send(
                             frames_sent,
                             send_socket,
                             frame_data,
-                            destination,
-                            packet_type=MSG_TYPE_VIDEO,
+                            address,
+                            MSG_TYPE_VIDEO,
+                            earth_moon,
                         )
+                        """
+
+                        p = Process(
+                            target=secure_send,
+                            args=(
+                                frames_sent,
+                                send_socket,
+                                frame_data,
+                                address,
+                                MSG_TYPE_VIDEO,
+                                earth_moon,
+                            ),
+                        )
+                        p.start()
+
                         frames_sent += 1
-                        print(f"[ROVER - SEND] Sent frame {frames_sent} to Earth Base")
+
+                        if frames_sent % 20 == 0:
+                            print(
+                                f"[ROVER - SEND] Sent frame {frames_sent} to Earth Base"
+                            )
                     except Exception:
                         continue
 
                 cap.release()
+                p.join()
+
             except Exception:
                 continue
+
         else:
             time.sleep(0.1)

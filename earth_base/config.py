@@ -16,7 +16,7 @@ EARTH_RECEIVE_CMD_PORT = int(os.getenv("LUNAR_ROVER_RECEIVE_CMD_PORT"))
 VIDEO_PORT = int(os.getenv("VIDEO_PORT"))
 EARTH_BASE_SEND_CMD_PORT = int(os.getenv("EARTH_BASE_SEND_CMD_PORT"))
 LUNAR_ROVER_RECIEVE_VIDEO_PORT = int(os.getenv("LUNAR_ROVER_RECIEVE_VIDEO_PORT"))
-
+SECRET_KEY = os.getenv("SECRET_KEY").encode()
 wait_time = 10
 retries = 3
 nf_queue_run = 1
@@ -43,3 +43,7 @@ video_2 = "video_2"
 video_3 = "video_3"
 frame_queue = PriorityQueue()
 asked_for_video = False
+
+
+earth_moon = "earth_moon"
+moon_moon = "moon_moon"

@@ -1,8 +1,9 @@
 import socket
 import msgpack
+import threading
 import random
 from earth_base.config import *
-from utils.client_server_comm import secure_receive, secure_send
+from utils.client_server_comm import secure_send_with_ack
 import earth_base.config as config
 
 
@@ -29,36 +30,23 @@ def send_data_to_rover(send_socket):
                     config.asked_for_video = True
 
                 send_socket.settimeout(wait_time)
+                seq_num = random.randint(1, 1000000)
+                address = (LUNAR_ROVER_1_IP, LUNAR_ROVER_SEND_DATA_PORT)
 
-                for attempt in range(retries):
-                    attempt += 1
-                    seq_num = random.randint(1, 1000000)
-                    packed_data = msgpack.packb(CMD_data, use_bin_type=True)
-
-                    secure_send(
-                        seq_num,
+                threading.Thread(
+                    target=secure_send_with_ack,
+                    args=(
                         send_socket,
-                        packed_data,
-                        (LUNAR_ROVER_1_IP, LUNAR_ROVER_SEND_DATA_PORT),
-                    )
-
-                    print(
-                        f"[EARTH COMM - OUTGOING] Attempt {attempt} Sent: {CMD_data} {packed_data}"
-                    )
-
-                    try:
-                        print(f"[ROVER to Earth - OUTGOING] Sent: {CMD_data}")
-                        ack_seq, ack_bytes, addr = secure_receive(send_socket)
-
-                        if ack_bytes:
-                            ack_message = msgpack.unpackb(ack_bytes, raw=False)
-                            print(
-                                f"[EARTH COMM - OUTGOING] ACK Received: {ack_seq} : {ack_message}"
-                            )
-                            break
-
-                    except socket.timeout:
-                        print(f"[WARNING] No ACK received, retrying...")
+                        CMD_data,
+                        address,
+                        retries,
+                        wait_time,
+                        seq_num,
+                        MSG_TYPE_SENSOR,
+                        earth_moon,
+                    ),
+                    daemon=True,
+                ).start()
 
             except Exception as e:
                 print(f"[ERROR send_data_to_rover] Failed to send data: {e}")

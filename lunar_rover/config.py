@@ -16,6 +16,7 @@ EARTH_RECEIVE_CMD_PORT = int(os.getenv("EARTH_RECEIVE_CMD_PORT"))
 EARTH_RECIEVE_VIDEO_PORT = int(os.getenv("EARTH_RECIEVE_VIDEO_PORT"))
 VIDEO_PATH = os.path.join(os.path.dirname(__file__), "Video.mp4")
 SEND_VIDEO_PORT = int(os.getenv("SEND_VIDEO_PORT"))
+SECRET_KEY = os.getenv("SECRET_KEY").encode()
 
 wait_time = 10
 retries = 3
@@ -41,3 +42,7 @@ video_queue = Queue()
 video_1 = "video_1"
 video_2 = "video_2"
 video_3 = "video_3"
+
+
+earth_moon = "earth_moon"
+moon_moon = "moon_moon"

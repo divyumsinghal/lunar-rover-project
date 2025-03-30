@@ -8,9 +8,9 @@ from utils.prevent_corruption import (
 )
 
 
-def make_packet(seq_num, data):
+def make_packet(seq_num, data, SECRET_KEY):
     try:
-        hmac_value = generate_hmac(data)
+        hmac_value = generate_hmac(data, SECRET_KEY)
         data_with_hmac = data + hmac_value
         compressed_data = compress_data(data_with_hmac)
         encoded_data = encode_data(compressed_data)
@@ -24,7 +24,7 @@ def make_packet(seq_num, data):
         return None
 
 
-def parse_packet(packet):
+def parse_packet(packet, SECRET_KEY):
     try:
         if len(packet) < 4:
             print("[ERROR parse_packet] Incomplete packet received.")
@@ -66,7 +66,7 @@ def parse_packet(packet):
         received_hmac = decompressed_data[-32:]
 
         try:
-            if not verify_hmac(original_data, received_hmac):
+            if not verify_hmac(original_data, received_hmac, SECRET_KEY):
                 print(
                     f"[ERROR verify_hmac] HMAC verification failed for packet {seq_num}. Possible tampering detected!"
                 )

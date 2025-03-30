@@ -1,18 +1,25 @@
 from utils.make_packet import make_packet, parse_packet
 from utils.simulate import simulate_channel
+import msgpack
 import socket
+import threading
 from utils.config import *
 
+SECRET_KEY = b"SUPER_SECRET_ROVER_KEY"
 
-def secure_send(seq_num, sock, data, addr, packet_type=MSG_TYPE_COMMAND):
+
+def secure_send(
+    seq_num, sock, data, addr, packet_type=MSG_TYPE_COMMAND, channel=earth_moon
+):
     try:
+        # print(packet_type)
         # Add packet type to the sequence number
         combined_seq = (packet_type << 28) | (
             seq_num & 0x0FFFFFFF
         )  # Use top 4 bits for type
-        packet = make_packet(combined_seq, data)
+        packet = make_packet(combined_seq, data, SECRET_KEY)
 
-        packet = simulate_channel(packet)
+        packet = simulate_channel(packet, channel)
 
         if packet is None:
             print(f"Packet was lost in transmission.")
@@ -32,7 +39,7 @@ def secure_receive(sock, packet_type=None):
     try:
         while True:
             packet, addr = sock.recvfrom(65535)
-            seq_num, data = parse_packet(packet)
+            seq_num, data = parse_packet(packet, SECRET_KEY)
 
             if seq_num is not None:
                 # Extract packet type and actual sequence number
@@ -68,3 +75,45 @@ def secure_receive(sock, packet_type=None):
     except Exception as e:
         print(f"[ERROR secure_receive] Unexpected error while receiving data: {e}")
         return None, None, None
+
+
+def secure_send_with_ack(
+    send_socket,
+    data,
+    address,
+    retries,
+    wait_time,
+    seq_num,
+    msg_type=MSG_TYPE_COMMAND,
+    channel=earth_moon,
+):
+
+    send_socket.settimeout(wait_time)
+
+    for attempt in range(1, retries + 1):
+        packed_data = msgpack.packb(data, use_bin_type=True)
+
+        secure_send(
+            seq_num,
+            sock=send_socket,
+            data=packed_data,
+            addr=address,
+            packet_type=msg_type,
+        )
+
+        print(f"[secure_send_with_ack - OUTGOING] Attempt {attempt} Sent: {data}")
+
+        try:
+            ack_seq, ack_bytes, _ = secure_receive(send_socket)
+            if ack_bytes:
+                ack_message = msgpack.unpackb(ack_bytes, raw=False)
+                print(
+                    f"[secure_send_with_ack - OUTGOING] ACK Received: {ack_seq} : {ack_message}"
+                )
+                return True
+        except socket.timeout:
+            print("[WARNING] No ACK received, retrying...")
+
+        print("[secure_send_with_ack - OUTGOING] failed to send message {data}")
+
+    return False

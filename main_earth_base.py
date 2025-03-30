@@ -3,7 +3,11 @@ import socket
 from earth_base.rover_receive import receive_data_from_rover
 from earth_base.rover_send import send_data_to_rover
 from earth_base.get_cmds import start_gui
-from earth_base.recieve_video import receive_video_from_rover
+from earth_base.recieve_video import (
+    receive_video_from_rover_1,
+    receive_video_from_rover_2,
+    receive_video_from_rover_3,
+)
 from earth_base.config import *
 from earth_base.video_player import video_playback
 
@@ -48,7 +52,15 @@ def main():
     ).start()
 
     threading.Thread(
-        target=receive_video_from_rover, args=(video_socket,), daemon=True
+        target=receive_video_from_rover_1, args=(video_socket,), daemon=True
+    ).start()
+
+    threading.Thread(
+        target=receive_video_from_rover_2, args=(video_socket,), daemon=True
+    ).start()
+
+    threading.Thread(
+        target=receive_video_from_rover_3, args=(video_socket,), daemon=True
     ).start()
 
     threading.Thread(target=video_playback, daemon=True).start()

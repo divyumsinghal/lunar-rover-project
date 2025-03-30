@@ -2,21 +2,25 @@ import time
 import random
 import numpy as np
 from scipy.stats import truncnorm
+from utils.config import *
 
 
-transmission_delay = 1400  # ms
-transmission_delay_base = 1.3
-jitter_mu = 0
-transmission_jitter = 0.1
-cosmic_ray_prob = 0.00001
-num_bits_to_flip = 1
-
-
-def simulate_jitter():
+def simulate_jitter(channel):
     try:
         # delay = np.random.normal(0, transmission_jitter)
-        delay = truncnorm.rvs(0, np.inf, loc=jitter_mu, scale=transmission_jitter)
-        # sleep
+        delay = (
+            truncnorm.rvs(
+                0,
+                np.inf,
+                loc=jitter_mu,
+                scale=transmission_jitter_earth_moon,
+            )
+            if (channel == earth_moon)
+            else truncnorm.rvs(
+                0, np.inf, loc=jitter_mu, scale=transmission_jitter_moon_moon
+            )
+        )
+        time.sleep(delay)
 
     except ValueError as e:
         print(f"[ERROR simulate_delay] Invalid parameter for Poisson distribution: {e}")
@@ -24,10 +28,14 @@ def simulate_jitter():
         print(f"[ERROR simulate_delay] Unexpected error during delay simulation: {e}")
 
 
-def base_simulate_delay():
+def base_simulate_delay(channel):
     try:
-        delay = transmission_delay_base
-        # sleep
+        delay = (
+            transmission_delay_base_earth_moon
+            if (channel == earth_moon)
+            else transmission_delay_base_moon_moon
+        )
+        time.sleep(delay)
 
     except ValueError as e:
         print(f"[ERROR simulate_delay] Invalid parameter for Poisson distribution: {e}")
@@ -58,62 +66,69 @@ def super_mario_speedrun_simulator(packet):
         return packet
 
 
-def corrupt_packet(packet, block_size=64):
-
-    transition_matrix = np.array(
-        [
-            [0.65, 0.24, 0.105, 0.005, 0.0, 0.0],  # from state 0 (no corruption)
-            [0.10, 0.80, 0.08, 0.02, 0.0, 0.0],  # from state 1 (very good)
-            [0.05, 0.10, 0.70, 0.10, 0.05, 0.0],  # from state 2 (good)
-            [0.02, 0.05, 0.15, 0.60, 0.15, 0.03],  # from state 3 (regular)
-            [0.01, 0.02, 0.07, 0.20, 0.60, 0.10],  # from state 4 (bad)
-            [0.05, 0.05, 0.10, 0.20, 0.30, 0.30],  # from state 5 (very bad)
-        ]
-    )
-
-    corruption_params = {
-        0: {"mean": 0, "std": 0},  # No corruption
-        1: {"mean": 1, "std": 0.5},  # Very good: almost no corruption
-        2: {"mean": 2, "std": 1},  # Good: low-level corruption
-        3: {"mean": 3, "std": 2},  # Regular: moderate corruption
-        4: {"mean": 5, "std": 3},  # Bad: severe corruption
-        5: {"mean": 12, "std": 3},  # Very bad: extensive corruption
-    }
-
-    corrupted = bytearray(packet)
-
-    current_state = 0
-
-    for block_start in range(0, len(corrupted), block_size):
-        block_end = min(block_start + block_size, len(corrupted))
-        block = bytearray(corrupted[block_start:block_end])
-        block_length = len(block)
-
-        if current_state != 0:
-            params = corruption_params[current_state]
-            block_size_to_corrupt = round(random.gauss(params["mean"], params["std"]))
-            block_size_to_corrupt = max(1, min(block_size_to_corrupt, block_length))
-
-            start_index = random.randint(0, block_length - block_size_to_corrupt)
-            for i in range(start_index, start_index + block_size_to_corrupt):
-                block[i] = random.randint(0, 255)
-
-        corrupted[block_start:block_end] = block
-        probs = transition_matrix[current_state]
-        current_state = int(np.random.choice(np.arange(6), p=probs))
-    else:
-        return bytes(corrupted)
-
-
-def simulate_channel(packet):
+def corrupt_packet(packet, block_size=64, channel=earth_moon):
     try:
-        if random.random() < 0.05:
+
+        transition_matrix = (
+            transition_matrix_earth_moon
+            if (channel == earth_moon)
+            else transition_matrix_moon_moon
+        )
+
+        corruption_params = (
+            corruption_params_earth_moon
+            if (channel == earth_moon)
+            else corruption_params_moon_moon
+        )
+
+        corrupted = bytearray(packet)
+
+        current_state = 0
+
+        for block_start in range(0, len(corrupted), block_size):
+            block_end = min(block_start + block_size, len(corrupted))
+            block = bytearray(corrupted[block_start:block_end])
+            block_length = len(block)
+
+            if current_state != 0:
+                params = corruption_params[current_state]
+                block_size_to_corrupt = round(
+                    random.gauss(params["mean"], params["std"])
+                )
+                block_size_to_corrupt = max(1, min(block_size_to_corrupt, block_length))
+
+                start_index = random.randint(0, block_length - block_size_to_corrupt)
+                for i in range(start_index, start_index + block_size_to_corrupt):
+                    block[i] = random.randint(0, 255)
+
+            corrupted[block_start:block_end] = block
+            probs = transition_matrix[current_state]
+            current_state = int(np.random.choice(np.arange(6), p=probs))
+        else:
+            return bytes(corrupted)
+
+    except IndexError as e:
+        print(f"[ERROR corrupt_packet] Index out of range: {e}")
+        return packet
+    except TypeError as e:
+        print(f"[ERROR corrupt_packet] Invalid data type: {e}")
+        return packet
+    except Exception as e:
+        print(f"[ERROR corrupt_packet] Unexpected error: {e}")
+        return packet
+
+
+def simulate_channel(packet, channel):
+    try:
+        if (channel == earth_moon) and random.random() < 0.15:
+            return None
+        if (channel == moon_moon) and random.random() < 0.05:
             return None
 
-        # base_simulate_delay()
-        # simulate_jitter()
+        base_simulate_delay(channel)
+        simulate_jitter(channel)
 
-        packet = corrupt_packet(packet)
+        packet = corrupt_packet(packet, channel=channel)
         packet = super_mario_speedrun_simulator(packet)
 
         return packet
