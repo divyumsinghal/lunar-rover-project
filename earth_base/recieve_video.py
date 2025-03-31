@@ -31,6 +31,7 @@ def receive_video_from_rover_1(recv_socket):
 
                 try:
                     play_frame_queue.put((int(timestamp), frame_data))
+                    video_to_store[int(timestamp)] = frame_data
                 except Exception as e:
                     print(f"[ERROR] Failed to add frame to queue: {e}")
 
@@ -70,6 +71,7 @@ def receive_video_from_rover_2(recv_socket):
 
                 try:
                     play_frame_queue.put((int(timestamp), frame_data))
+                    video_to_store[int(timestamp)] = frame_data
                 except Exception as e:
                     print(f"[ERROR] Failed to add frame to queue: {e}")
 
@@ -109,6 +111,8 @@ def receive_video_from_rover_3(recv_socket):
 
                 try:
                     play_frame_queue.put((int(timestamp), frame_data))
+                    video_to_store[int(timestamp)] = frame_data
+
                 except Exception as e:
                     print(f"[ERROR] Failed to add frame to queue: {e}")
 

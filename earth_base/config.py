@@ -27,7 +27,6 @@ EARTH_RECEIVE_CMD_PORT_4 = int(os.getenv("LUNAR_ROVER_RECEIVE_CMD_PORT_4"))
 
 VIDEO_PORT = int(os.getenv("VIDEO_PORT"))
 LUNAR_ROVER_RECIEVE_VIDEO_PORT = int(os.getenv("LUNAR_ROVER_RECIEVE_VIDEO_PORT"))
-SECRET_KEY = os.getenv("SECRET_KEY").encode()
 
 wait_time = 10
 retries = 3
@@ -52,6 +51,10 @@ soil_pH = "Soil pH"
 soil_temp = "Soil Temperature"
 soil_conductivity = "Soil Conductivity"
 
+SECRET_KEY_EARTH_ROVER = os.getenv("SECRET_KEY_EARTH_ROVER").encode()
+SECRET_KEY_ROVER_TUNNELLER = os.getenv("SECRET_KEY_ROVER_TUNNELLER").encode()
+SECRET_KEY_ROVER_EXTERNAL = os.getenv("SECRET_KEY_ROVER_EXTERNAL").encode()
+
 # Message type identifiers for packet filtering
 MSG_TYPE_COMMAND = 1
 MSG_TYPE_ACK = 2
@@ -66,7 +69,15 @@ video_3 = "video_3"
 play_frame_queue = PriorityQueue()
 process_frame_queue = Queue()
 
+video_to_store = {}
+
 asked_for_video = False
 
 earth_moon = "earth_moon"
 moon_moon = "moon_moon"
+
+EARTH_BASE_HANDSHAKE_PORT = int(os.getenv("EARTH_BASE_HANDSHAKE_PORT"))
+LUNAR_ROVER_HANDSHAKE_PORT = int(os.getenv("LUNAR_ROVER_HANDSHAKE_PORT"))
+LUNAR_TUNNELLER_HANDSHAKE_PORT = int(os.getenv("LUNAR_TUNNELLER_HANDSHAKE_PORT"))
+
+sensor_data_recv_queue = Queue()

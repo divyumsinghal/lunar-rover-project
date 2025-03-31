@@ -24,7 +24,6 @@ EARTH_RECEIVE_CMD_PORT_4 = int(os.getenv("EARTH_RECEIVE_CMD_PORT_4"))
 EARTH_RECIEVE_VIDEO_PORT = int(os.getenv("EARTH_RECIEVE_VIDEO_PORT"))
 VIDEO_PATH = os.path.join(os.path.dirname(__file__), "Video.mp4")
 SEND_VIDEO_PORT = int(os.getenv("SEND_VIDEO_PORT"))
-SECRET_KEY = os.getenv("SECRET_KEY").encode()
 
 LUNAR_TUNNELLER_IP = os.getenv("LUNAR_TUNNELLER_IP")
 LUNAR_TUNNELLER_RECV_CMD_PORT = int(os.getenv("LUNAR_TUNNELLER_RECV_CMD_PORT"))
@@ -70,15 +69,26 @@ MSG_TYPE_ACK = 2
 MSG_TYPE_VIDEO = 3
 MSG_TYPE_SENSOR = 4
 
+SECRET_KEY_EARTH_ROVER = os.getenv("SECRET_KEY_EARTH_ROVER").encode()
+SECRET_KEY_ROVER_TUNNELLER = os.getenv("SECRET_KEY_ROVER_TUNNELLER").encode()
+SECRET_KEY_ROVER_EXTERNAL = os.getenv("SECRET_KEY_ROVER_EXTERNAL").encode()
+
+
 video_queue = Queue()
 video_1 = "video_1"
 video_2 = "video_2"
 video_3 = "video_3"
 
 
+EARTH_BASE_HANDSHAKE_PORT = int(os.getenv("EARTH_BASE_HANDSHAKE_PORT"))
+LUNAR_ROVER_HANDSHAKE_PORT = int(os.getenv("LUNAR_ROVER_HANDSHAKE_PORT"))
+LUNAR_TUNNELLER_HANDSHAKE_PORT = int(os.getenv("LUNAR_TUNNELLER_HANDSHAKE_PORT"))
+
+
 earth_moon = "earth_moon"
 moon_moon = "moon_moon"
 
+video_to_send = {}
 
 tunneller_command_queue = Queue()
 asked_for_video = False

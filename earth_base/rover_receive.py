@@ -11,7 +11,7 @@ def receive_data_from_rover_1(recv_socket):
             seq_num, data_bytes, addr = secure_receive(recv_socket)
 
             print(
-                f"[LUNAR ROVER - RECEIVE] Recieving on port {EARTH_RECEIVE_CMD_PORT_1}"
+                f"[EARTH COMM - RECEIVE] Recieving on port {EARTH_RECEIVE_CMD_PORT_1}"
             )
 
             if data_bytes:
@@ -33,6 +33,8 @@ def receive_data_from_rover_1(recv_socket):
                     packet_type=MSG_TYPE_ACK,
                     channel=earth_moon,
                 )
+
+                sensor_data_recv_queue.put({seq_num: payload})
 
         except Exception as e:
             print(f"[ERROR receive_data_from_rover] Failed to receive data: {e}")
@@ -69,6 +71,8 @@ def receive_data_from_rover_2(recv_socket):
                     channel=earth_moon,
                 )
 
+                sensor_data_recv_queue.put({seq_num: payload})
+
         except Exception as e:
             print(f"[ERROR receive_data_from_rover] Failed to receive data: {e}")
 
@@ -104,6 +108,8 @@ def receive_data_from_rover_3(recv_socket):
                     channel=earth_moon,
                 )
 
+                sensor_data_recv_queue.put({seq_num: payload})
+
         except Exception as e:
             print(f"[ERROR receive_data_from_rover] Failed to receive data: {e}")
 
@@ -138,6 +144,8 @@ def receive_data_from_rover_4(recv_socket):
                     packet_type=MSG_TYPE_ACK,
                     channel=earth_moon,
                 )
+
+                sensor_data_recv_queue.put({seq_num: payload})
 
         except Exception as e:
             print(f"[ERROR receive_data_from_rover] Failed to receive data: {e}")

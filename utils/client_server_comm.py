@@ -5,11 +5,17 @@ import socket
 import threading
 from utils.config import *
 
-SECRET_KEY = b"SUPER_SECRET_ROVER_KEY"
+SECRET_KEY_DUMMY = b"SUPER_SECRET_ROVER_KEY"
 
 
 def secure_send(
-    seq_num, sock, data, addr, packet_type=MSG_TYPE_COMMAND, channel=earth_moon
+    seq_num,
+    sock,
+    data,
+    addr,
+    packet_type=MSG_TYPE_COMMAND,
+    channel=earth_moon,
+    SECRET_KEY=SECRET_KEY_DUMMY,
 ):
     try:
         # print(packet_type)
@@ -35,7 +41,11 @@ def secure_send(
         print(f"[ERROR secure_send] Unexpected error while sending data: {e}")
 
 
-def secure_receive(sock, packet_type=None):
+def secure_receive(
+    sock,
+    packet_type=None,
+    SECRET_KEY=SECRET_KEY_DUMMY,
+):
     try:
         while True:
             packet, addr = sock.recvfrom(65535)
@@ -86,6 +96,7 @@ def secure_send_with_ack(
     seq_num,
     msg_type=MSG_TYPE_COMMAND,
     channel=earth_moon,
+    SECRET_KEY=SECRET_KEY_DUMMY,
 ):
 
     send_socket.settimeout(wait_time)
@@ -99,12 +110,14 @@ def secure_send_with_ack(
             data=packed_data,
             addr=address,
             packet_type=msg_type,
+            channel=channel,
+            SECRET_KEY=SECRET_KEY,
         )
 
         print(f"[secure_send_with_ack - OUTGOING] Attempt {attempt} Sent: {data}")
 
         try:
-            ack_seq, ack_bytes, _ = secure_receive(send_socket)
+            ack_seq, ack_bytes, _ = secure_receive(send_socket, SECRET_KEY=SECRET_KEY)
             if ack_bytes:
                 ack_message = msgpack.unpackb(ack_bytes, raw=False)
                 print(

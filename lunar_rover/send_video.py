@@ -65,6 +65,8 @@ def send_video_to_earth(send_socket):
                             )
                             """
 
+                            video_to_send[frames_sent] = frame_data
+
                             p = Process(
                                 target=secure_send,
                                 args=(
@@ -90,6 +92,7 @@ def send_video_to_earth(send_socket):
 
                     cap.release()
                     p.join()
+                    video_to_send.clear()
 
                 elif command == video_2:
 
