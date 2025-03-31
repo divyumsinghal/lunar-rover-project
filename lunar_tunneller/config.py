@@ -46,6 +46,7 @@ message_type = "Type"
 message_data = "Data"
 invalid_command = "Invalid Command"
 ack = "ACK"
+nak = "NAK"
 cmd = "CMD"
 video = "VID"
 sens = "SENS"
@@ -71,6 +72,7 @@ MSG_TYPE_ACK = 2
 MSG_TYPE_VIDEO = 3
 MSG_TYPE_SENSOR = 4
 MSG_TYPE_HANDSHAKE = 5
+MSG_TYPE_NAK = 6
 
 EARTH_BASE_HANDSHAKE_PORT = int(os.getenv("EARTH_BASE_HANDSHAKE_PORT"))
 LUNAR_ROVER_HANDSHAKE_PORT_EARTH = int(os.getenv("LUNAR_ROVER_HANDSHAKE_PORT_EARTH"))

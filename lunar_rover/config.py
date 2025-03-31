@@ -50,6 +50,7 @@ message_type = "Type"
 message_data = "Data"
 invalid_command = "Invalid Command"
 ack = "ACK"
+nak = "NAK"
 cmd = "CMD"
 video = "VID"
 sens = "SENS"
@@ -74,6 +75,7 @@ MSG_TYPE_ACK = 2
 MSG_TYPE_VIDEO = 3
 MSG_TYPE_SENSOR = 4
 MSG_TYPE_HANDSHAKE = 5
+MSG_TYPE_NAK = 6
 
 video_queue = Queue()
 video_1 = "video_1"
@@ -88,6 +90,7 @@ LUNAR_ROVER_HANDSHAKE_PORT_TUNNELLER = int(
 )
 LUNAR_TUNNELLER_HANDSHAKE_PORT = int(os.getenv("LUNAR_TUNNELLER_HANDSHAKE_PORT"))
 
+LUNAR_ROVER_VIDEO_NACK_PORT = int(os.getenv("LUNAR_ROVER_VIDEO_NACK_PORT"))
 
 earth_moon = "earth_moon"
 moon_moon = "moon_moon"

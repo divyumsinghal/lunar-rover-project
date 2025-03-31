@@ -2,9 +2,10 @@ import time
 import cv2
 import os
 from lunar_tunneller.config import *
-from utils.client_server_comm import secure_send
+from utils.client_server_comm import secure_send, secure_receive
 from multiprocessing import Process
 import lunar_tunneller.config as config
+import msgpack
 
 
 def send_video_to_rover(send_socket):
@@ -76,3 +77,23 @@ def send_video_to_rover(send_socket):
 
         else:
             time.sleep(0.1)
+
+
+def get_nack_for_video(recv_sock):
+    while True:
+        while not config.connection_with_rover:
+            # print("[send_data_to_rover - SEND] Waiting for connection with rover...")
+            time.sleep(0.5)
+
+        try:
+            seq_num, data_bytes, addr = secure_receive(recv_sock)
+            if data_bytes:
+                message = msgpack.unpackb(data_bytes, raw=False)
+                recieved_type = message.get(message_type)
+                payload = message.get(message_data)
+
+                if recieved_type == nak:
+                    print(f"[ROVER - NACK] Received NACK for video")
+
+        except Exception as e:
+            print(f"[ERROR send_video_to_rover] Error: {e}")

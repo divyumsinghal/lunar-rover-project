@@ -85,8 +85,10 @@ def receive_video_from_tunneller_1(recv_socket, send_socket):
                         except Exception as e:
                             print(f"[ERROR] Failed to add frame to queue: {e}")
 
-                video_to_send.clear()
                 config.asked_for_video = False
+
+                time.sleep(5)
+                video_to_send.clear()
 
             except Exception as e:
                 print(f"[ERROR] Fatal error in video receiving: {e}")

@@ -17,6 +17,7 @@ from earth_base.recieve_video import (
     receive_video_from_rover_1,
     receive_video_from_rover_2,
     receive_video_from_rover_3,
+    send_naks_for_video,
 )
 from earth_base.handshake import handshake_earth_rover
 from earth_base.config import *
@@ -56,6 +57,9 @@ receive_data_from_rover_socket_4.bind((EARTH_BASE_IP, EARTH_RECEIVE_CMD_PORT_4))
 video_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 video_socket.bind((EARTH_BASE_IP, VIDEO_PORT))
 print(f"[INFO] Video receive socket bound to {video_socket.getsockname()}")
+
+# Send Naks for video
+nack_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 # Handshake
 handshake_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -131,6 +135,13 @@ def main():
     ).start()
 
     threading.Thread(target=video_playback, daemon=True).start()
+
+    # Send Naks for Video
+    threading.Thread(
+        target=send_naks_for_video,
+        args=(nack_socket, (LUNAR_ROVER_1_IP, LUNAR_ROVER_VIDEO_NACK_PORT)),
+        daemon=True,
+    ).start()
 
     start_gui(
         command_queue_1=command_queue_1,

@@ -40,6 +40,7 @@ command_queue_4 = Queue()
 message_type = "Type"
 message_data = "Data"
 ack = "ACK"
+nak = "NAK"
 cmd = "CMD"
 video = "VID"
 sens = "SENS"
@@ -62,6 +63,7 @@ MSG_TYPE_ACK = 2
 MSG_TYPE_VIDEO = 3
 MSG_TYPE_SENSOR = 4
 MSG_TYPE_HANDSHAKE = 5
+MSG_TYPE_NAK = 6
 
 video_queue = Queue()
 video_1 = "video_1"
@@ -84,6 +86,8 @@ LUNAR_ROVER_HANDSHAKE_PORT_TUNNELLER = int(
     os.getenv("LUNAR_ROVER_HANDSHAKE_PORT_TUNNELLER")
 )
 LUNAR_TUNNELLER_HANDSHAKE_PORT = int(os.getenv("LUNAR_TUNNELLER_HANDSHAKE_PORT"))
+
+LUNAR_ROVER_VIDEO_NACK_PORT = int(os.getenv("LUNAR_ROVER_VIDEO_NACK_PORT"))
 
 sensor_data_recv_queue = Queue()
 connection_with_rover = False

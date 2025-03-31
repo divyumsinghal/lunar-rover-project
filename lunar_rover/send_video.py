@@ -3,7 +3,8 @@ import cv2
 import os
 from lunar_rover.config import *
 import lunar_rover.config as config
-from utils.client_server_comm import secure_send, secure_send_with_ack
+from utils.client_server_comm import secure_send, secure_send_with_ack, secure_receive
+import msgpack
 import threading
 from multiprocessing import Process
 import random
@@ -96,11 +97,17 @@ def send_video_to_earth(send_socket):
 
                     cap.release()
                     p.join()
+
+                    time.sleep(5)
                     video_to_send.clear()
 
                 elif command == video_2:
 
+                    print("processing video_2")
+
                     if not config.connection_with_tunneller:
+                        print("video 2 unavailable")
+
                         threading.Thread(
                             target=secure_send_with_ack,
                             args=(
@@ -109,7 +116,7 @@ def send_video_to_earth(send_socket):
                                     message_type: sens,
                                     message_data: tunneller_unavailable,
                                 },
-                                (EARTH_BASE_IP, EARTH_RECEIVE_CMD_PORT_1),
+                                (EARTH_BASE_IP, EARTH_SEND_DATA_PORT_1),
                                 retries,
                                 wait_time,
                                 seq_num,
@@ -153,3 +160,32 @@ def send_video_to_earth(send_socket):
 
         else:
             time.sleep(0.1)
+
+
+def get_nack_for_video(recv_sock):
+    while True:
+        while not config.connection_with_earth:
+            # print("[send_data_to_rover - SEND] Waiting for connection with rover...")
+            time.sleep(0.5)
+
+        try:
+            seq_num, data_bytes, addr = secure_receive(recv_sock)
+            if data_bytes:
+                message = msgpack.unpackb(data_bytes, raw=False)
+                recieved_type = message.get(message_type)
+                payload = int(message.get(message_data))
+                address = (EARTH_BASE_IP, EARTH_RECIEVE_VIDEO_PORT)
+
+                if recieved_type == nak:
+                    # print(f"[ROVER - SEND] Received NACK for {payload}")
+                    secure_send(
+                        payload,
+                        recv_sock,
+                        video_to_send[payload],
+                        address,
+                        MSG_TYPE_VIDEO,
+                        earth_moon,
+                    )
+
+        except Exception as e:
+            print(f"[ERROR send_video_to_rover] Error: {e}")

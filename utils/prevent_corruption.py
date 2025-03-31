@@ -4,7 +4,7 @@ import hashlib
 import numpy as np
 import math
 
-rs = reedsolo.RSCodec(10)
+rs = reedsolo.RSCodec(12)
 
 
 def generate_hmac(data, SECRET_KEY):

@@ -29,6 +29,8 @@ def video_playback():
 
             grace_period = 0
 
+            last_played_frame = 0
+
             while True:
 
                 try:
@@ -40,11 +42,13 @@ def video_playback():
                     if frame is None:
                         continue
 
-                    cv2.imshow("Video Playback", frame)
+                    if timestamp > last_played_frame:
+                        last_played_frame = timestamp
+                        cv2.imshow("Video Playback", frame)
 
-                    wait_time = max(1, int(1000 / FRAME_RATE))
-                    if cv2.waitKey(wait_time) & 0xFF == ord("q"):
-                        break
+                        wait_time = max(1, int(1000 / FRAME_RATE))
+                        if cv2.waitKey(wait_time) & 0xFF == ord("q"):
+                            break
 
                 except queue.Empty:
                     grace_period += 1
