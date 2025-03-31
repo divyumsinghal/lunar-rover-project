@@ -1,7 +1,10 @@
 import threading
 import socket
-from earth_base.rover_receive import receive_data_from_rover
-from earth_base.rover_send import send_data_to_rover
+from earth_base.rover_receive import (
+    receive_data_from_rover_1,
+    receive_data_from_rover_2,
+)
+from earth_base.rover_send import send_data_to_rover_1, send_data_to_rover_2
 from earth_base.get_cmds import start_gui
 from earth_base.recieve_video import (
     receive_video_from_rover_1,
@@ -18,16 +21,33 @@ from earth_base.video_player import video_playback
 print(f"[INFO] Starting Earth Base with configuration:")
 print(f"[INFO] - Local IP: {EARTH_BASE_IP}")
 print(f"[INFO] - Rover IP: {LUNAR_ROVER_1_IP}")
-print(f"[INFO] - Command receive port: {EARTH_RECEIVE_CMD_PORT}")
+print(f"[INFO] - Command receive port: {EARTH_RECEIVE_CMD_PORT_1}")
 print(f"[INFO] - Video receive port: {VIDEO_PORT}")
 
-send_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-send_socket.bind((EARTH_BASE_IP, EARTH_BASE_SEND_CMD_PORT))
-print(f"[INFO] Command send socket bound to {send_socket.getsockname()}")
+send_data_to_rover_socket_1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+send_data_to_rover_socket_1.bind((EARTH_BASE_IP, EARTH_BASE_SEND_CMD_PORT_1))
+print(
+    f"[INFO] Command send socket bound to {send_data_to_rover_socket_1.getsockname()}"
+)
 
-recv_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-recv_socket.bind((EARTH_BASE_IP, EARTH_RECEIVE_CMD_PORT))
-print(f"[INFO] Command receive socket bound to {recv_socket.getsockname()}")
+send_data_to_rover_socket_2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+send_data_to_rover_socket_2.bind((EARTH_BASE_IP, EARTH_BASE_SEND_CMD_PORT_2))
+print(
+    f"[INFO] Command send socket bound to {send_data_to_rover_socket_2.getsockname()}"
+)
+
+receive_data_from_rover_socket_1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+receive_data_from_rover_socket_1.bind((EARTH_BASE_IP, EARTH_RECEIVE_CMD_PORT_1))
+print(
+    f"[INFO] Command receive socket bound to {receive_data_from_rover_socket_1.getsockname()}"
+)
+
+receive_data_from_rover_socket_2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+receive_data_from_rover_socket_2.bind((EARTH_BASE_IP, EARTH_RECEIVE_CMD_PORT_2))
+print(
+    f"[INFO] Command receive socket bound to {receive_data_from_rover_socket_2.getsockname()}"
+)
+
 
 video_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 video_socket.bind((EARTH_BASE_IP, VIDEO_PORT))
@@ -44,11 +64,23 @@ def main():
     # nfqueue.bind(nf_queue_run, process_packet_in_the_channel)
 
     threading.Thread(
-        target=receive_data_from_rover, args=(recv_socket,), daemon=True
+        target=receive_data_from_rover_1,
+        args=(receive_data_from_rover_socket_1,),
+        daemon=True,
     ).start()
 
     threading.Thread(
-        target=send_data_to_rover, args=(send_socket,), daemon=True
+        target=receive_data_from_rover_2,
+        args=(receive_data_from_rover_socket_2,),
+        daemon=True,
+    ).start()
+
+    threading.Thread(
+        target=send_data_to_rover_1, args=(send_data_to_rover_socket_1,), daemon=True
+    ).start()
+
+    threading.Thread(
+        target=send_data_to_rover_2, args=(send_data_to_rover_socket_2,), daemon=True
     ).start()
 
     threading.Thread(
@@ -65,7 +97,11 @@ def main():
 
     threading.Thread(target=video_playback, daemon=True).start()
 
-    start_gui(command_queue=command_queue, video_queue=video_queue)
+    start_gui(
+        command_queue_1=command_queue_1,
+        command_queue_2=command_queue_2,
+        video_queue=video_queue,
+    )
 
     try:
         # nfqueue.run()

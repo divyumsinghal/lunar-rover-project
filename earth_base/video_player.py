@@ -14,10 +14,10 @@ def video_playback():
             time.sleep(0.1)
         print("[INFO] First frame received, starting playback")
 
-        time.sleep(10)  # Allow some time for the first frame to be processed
+        time.sleep(2)  # Allow some time for the buffering to be processed
 
         cv2.namedWindow("Video Playback", cv2.WINDOW_NORMAL)
-        cv2.resizeWindow("Video Playback", 1280, 720)
+        cv2.resizeWindow("Video Playback", 720, 720)
 
         while True:
             try:

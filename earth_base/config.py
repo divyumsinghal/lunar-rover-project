@@ -10,10 +10,23 @@ load_dotenv(
 EARTH_BASE_IP = os.getenv("EARTH_BASE_IP")
 LUNAR_ROVER_1_IP = os.getenv("LUNAR_ROVER_1_IP")
 
-LUNAR_ROVER_SEND_DATA_PORT = int(os.getenv("LUNAR_ROVER_SEND_DATA_PORT"))
-EARTH_RECEIVE_CMD_PORT = int(os.getenv("LUNAR_ROVER_RECEIVE_CMD_PORT"))
+LUNAR_ROVER_SEND_DATA_PORT_1 = int(os.getenv("LUNAR_ROVER_SEND_DATA_PORT_1"))
+LUNAR_ROVER_SEND_DATA_PORT_2 = int(os.getenv("LUNAR_ROVER_SEND_DATA_PORT_2"))
+LUNAR_ROVER_SEND_DATA_PORT_3 = int(os.getenv("LUNAR_ROVER_SEND_DATA_PORT_3"))
+LUNAR_ROVER_SEND_DATA_PORT_4 = int(os.getenv("LUNAR_ROVER_SEND_DATA_PORT_4"))
+
+EARTH_BASE_SEND_CMD_PORT_1 = int(os.getenv("EARTH_BASE_SEND_CMD_PORT_1"))
+EARTH_BASE_SEND_CMD_PORT_2 = int(os.getenv("EARTH_BASE_SEND_CMD_PORT_2"))
+EARTH_BASE_SEND_CMD_PORT_3 = int(os.getenv("EARTH_BASE_SEND_CMD_PORT_3"))
+EARTH_BASE_SEND_CMD_PORT_4 = int(os.getenv("EARTH_BASE_SEND_CMD_PORT_4"))
+
+EARTH_RECEIVE_CMD_PORT_1 = int(os.getenv("LUNAR_ROVER_RECEIVE_CMD_PORT_1"))
+EARTH_RECEIVE_CMD_PORT_2 = int(os.getenv("LUNAR_ROVER_RECEIVE_CMD_PORT_2"))
+EARTH_RECEIVE_CMD_PORT_3 = int(os.getenv("LUNAR_ROVER_RECEIVE_CMD_PORT_3"))
+EARTH_RECEIVE_CMD_PORT_4 = int(os.getenv("LUNAR_ROVER_RECEIVE_CMD_PORT_4"))
+
 VIDEO_PORT = int(os.getenv("VIDEO_PORT"))
-EARTH_BASE_SEND_CMD_PORT = int(os.getenv("EARTH_BASE_SEND_CMD_PORT"))
+
 LUNAR_ROVER_RECIEVE_VIDEO_PORT = int(os.getenv("LUNAR_ROVER_RECIEVE_VIDEO_PORT"))
 SECRET_KEY = os.getenv("SECRET_KEY").encode()
 wait_time = 10
@@ -21,7 +34,11 @@ retries = 3
 nf_queue_run = 1
 FRAME_RATE = 30
 
-command_queue = Queue()
+command_queue_1 = Queue()
+command_queue_2 = Queue()
+command_queue_3 = Queue()
+command_queue_4 = Queue()
+
 message_type = "Type"
 message_data = "Data"
 ack = "ACK"
