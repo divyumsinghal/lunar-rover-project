@@ -77,6 +77,18 @@ def send_data_to_earth_2(send_socket):
                 elif command == humidity:
                     sensor_data.update({message_data: humidity + " " + "0"})
                     print(f"[EARTH - send_data_to_earth] Command Queue: {command}")
+
+                elif command in [
+                    soil_temp,
+                    soil_conductivity,
+                    soil_moisture,
+                    soil_pH,
+                ]:
+                    sensor_data.update(
+                        {message_data: command + " " + str(random.randint(0, 100))}
+                    )
+                    print(f"[EARTH - send_data_to_earth] Command Queue: {command}")
+
                 else:
                     sensor_data.update({message_data: invalid_command + " " + command})
                     print(f"[INFO send_data_to_earth] Invalid command: {command}")

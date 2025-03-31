@@ -8,6 +8,8 @@ load_dotenv(
     override=False,
 )
 
+LUNAR_TUNNELLER_IP = os.getenv("LUNAR_TUNNELLER_IP")
+
 EARTH_BASE_IP = os.getenv("EARTH_BASE_IP")
 LUNAR_ROVER_1_IP = os.getenv("LUNAR_ROVER_1_IP")
 
@@ -26,15 +28,16 @@ VIDEO_PATH = os.path.join(os.path.dirname(__file__), "Video.mp4")
 SEND_VIDEO_PORT = int(os.getenv("SEND_VIDEO_PORT"))
 SECRET_KEY = os.getenv("SECRET_KEY").encode()
 
+LUNAR_TUNNELLER_RECEIVE_CMD_PORT = int(os.getenv("LUNAR_TUNNELLER_RECV_CMD_PORT"))
+
+TO_ROVER_TUNNELLER_SEND_DATA_PORT = int(os.getenv("TO_ROVER_TUNNELLER_SEND_DATA_PORT"))
+
+ROVER_RECIEVE_VIDEO_PORT = int(os.getenv("ROVER_RECIEVE_VIDEO_PORT"))
+
 wait_time = 10
 retries = 3
 nf_queue_run = 1
 FRAME_RATE = 30
-
-command_queue_1 = Queue()
-command_queue_2 = Queue()
-command_queue_3 = Queue()
-command_queue_4 = Queue()
 
 message_type = "Type"
 message_data = "Data"
@@ -45,6 +48,12 @@ video = "VID"
 sens = "SENS"
 temperature = "Temperature"
 humidity = "Humidity"
+video_2 = "video_2"
+
+soil_moisture = "Soil Moisture"
+soil_pH = "Soil pH"
+soil_temp = "Soil Temperature"
+soil_conductivity = "Soil Conductivity"
 
 # Message type identifiers for packet filtering
 MSG_TYPE_COMMAND = 1
@@ -52,11 +61,8 @@ MSG_TYPE_ACK = 2
 MSG_TYPE_VIDEO = 3
 MSG_TYPE_SENSOR = 4
 
-video_queue = Queue()
-video_1 = "video_1"
-video_2 = "video_2"
-video_3 = "video_3"
-
-
 earth_moon = "earth_moon"
 moon_moon = "moon_moon"
+
+command_queue = Queue()
+video_queue = Queue()

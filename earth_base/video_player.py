@@ -1,4 +1,5 @@
 from earth_base.config import *
+import earth_base.config as config
 import cv2
 import numpy as np
 import time
@@ -42,6 +43,7 @@ def video_playback():
                     print(
                         "[INFO] No frames received for 10 seconds, stopping playback."
                     )
+                    config.asked_for_video = False
                     break
                 else:
                     time.sleep(1)

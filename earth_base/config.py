@@ -45,6 +45,12 @@ cmd = "CMD"
 video = "VID"
 sens = "SENS"
 temperature = "Temperature"
+humidity = "Humidity"
+
+soil_moisture = "Soil Moisture"
+soil_pH = "Soil pH"
+soil_temp = "Soil Temperature"
+soil_conductivity = "Soil Conductivity"
 
 # Message type identifiers for packet filtering
 MSG_TYPE_COMMAND = 1

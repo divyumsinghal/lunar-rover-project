@@ -26,6 +26,13 @@ VIDEO_PATH = os.path.join(os.path.dirname(__file__), "Video.mp4")
 SEND_VIDEO_PORT = int(os.getenv("SEND_VIDEO_PORT"))
 SECRET_KEY = os.getenv("SECRET_KEY").encode()
 
+LUNAR_TUNNELLER_IP = os.getenv("LUNAR_TUNNELLER_IP")
+LUNAR_TUNNELLER_RECV_CMD_PORT = int(os.getenv("LUNAR_TUNNELLER_RECV_CMD_PORT"))
+
+TO_ROVER_TUNNELLER_SEND_DATA_PORT = int(os.getenv("TO_ROVER_TUNNELLER_SEND_DATA_PORT"))
+
+ROVER_RECIEVE_VIDEO_PORT = int(os.getenv("ROVER_RECIEVE_VIDEO_PORT"))
+
 wait_time = 10
 retries = 3
 nf_queue_run = 1
@@ -45,6 +52,12 @@ sens = "SENS"
 temperature = "Temperature"
 humidity = "Humidity"
 
+
+soil_moisture = "Soil Moisture"
+soil_pH = "Soil pH"
+soil_temp = "Soil Temperature"
+soil_conductivity = "Soil Conductivity"
+
 # Message type identifiers for packet filtering
 MSG_TYPE_COMMAND = 1
 MSG_TYPE_ACK = 2
@@ -59,3 +72,6 @@ video_3 = "video_3"
 
 earth_moon = "earth_moon"
 moon_moon = "moon_moon"
+
+
+tunneller_command_queue = Queue()
