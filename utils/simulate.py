@@ -4,6 +4,8 @@ import numpy as np
 from scipy.stats import truncnorm
 from utils.config import *
 
+current_state = 0
+
 
 def simulate_jitter(channel):
     try:
@@ -66,7 +68,8 @@ def super_mario_speedrun_simulator(packet):
         return packet
 
 
-def corrupt_packet(packet, block_size=64, channel=earth_moon):
+def corrupt_packet(packet, block_size=1024, channel=earth_moon):
+    global current_state
     try:
 
         transition_matrix = (
@@ -82,8 +85,6 @@ def corrupt_packet(packet, block_size=64, channel=earth_moon):
         )
 
         corrupted = bytearray(packet)
-
-        current_state = 0
 
         for block_start in range(0, len(corrupted), block_size):
             block_end = min(block_start + block_size, len(corrupted))
