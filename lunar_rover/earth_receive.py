@@ -1,13 +1,20 @@
 import msgpack
+import time
 from lunar_rover.config import *
 from utils.client_server_comm import secure_send, secure_receive
+import lunar_rover.config as config
 
 
 def receive_data_from_earth_1(recv_socket):
     print(f"[LUNAR ROVER - RECEIVE] Listening on port {EARTH_RECEIVE_CMD_PORT_1}")
 
     while True:
+
         try:
+
+            while not config.connection_with_earth:
+                time.sleep(0.1)
+
             seq_num, data_bytes, addr = secure_receive(recv_socket)
             print(
                 f"[LUNAR ROVER - RECEIVE] Receiving on port {EARTH_RECEIVE_CMD_PORT_1}"
@@ -56,6 +63,10 @@ def receive_data_from_earth_2(recv_socket):
 
     while True:
         try:
+
+            while not config.connection_with_earth:
+                time.sleep(0.1)
+
             seq_num, data_bytes, addr = secure_receive(recv_socket)
             print(
                 f"[LUNAR ROVER - RECEIVE] Receiving on port {EARTH_RECEIVE_CMD_PORT_2}"
@@ -98,6 +109,10 @@ def receive_data_from_earth_3(recv_socket):
     print(f"[LUNAR ROVER - RECEIVE] Listening on port {EARTH_RECEIVE_CMD_PORT_3}")
 
     while True:
+
+        while not config.connection_with_earth:
+            time.sleep(0.1)
+
         try:
             seq_num, data_bytes, addr = secure_receive(recv_socket)
             print(
@@ -147,6 +162,10 @@ def receive_data_from_earth_4(recv_socket):
 
     while True:
         try:
+
+            while not config.connection_with_earth:
+                time.sleep(0.1)
+
             seq_num, data_bytes, addr = secure_receive(recv_socket)
             print(
                 f"[LUNAR ROVER - RECEIVE] Receiving on port {EARTH_RECEIVE_CMD_PORT_4}"

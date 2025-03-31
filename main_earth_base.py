@@ -71,7 +71,7 @@ def main():
     # Handshake with rover
     threading.Thread(
         target=handshake_earth_rover,
-        args=(handshake_socket, LUNAR_ROVER_1_IP, LUNAR_ROVER_HANDSHAKE_PORT),
+        args=(handshake_socket, LUNAR_ROVER_1_IP, LUNAR_ROVER_HANDSHAKE_PORT_EARTH),
         daemon=True,
     ).start()
 

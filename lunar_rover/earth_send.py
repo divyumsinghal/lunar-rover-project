@@ -2,6 +2,8 @@ import random
 import threading
 from lunar_rover.config import *
 from utils.client_server_comm import *
+import lunar_rover.config as config
+import time
 
 
 def send_data_to_earth_1(send_socket):
@@ -10,6 +12,10 @@ def send_data_to_earth_1(send_socket):
     )
 
     while True:
+
+        while not config.connection_with_earth:
+            time.sleep(0.1)
+
         if not command_queue_1.empty():
             try:
 
@@ -96,6 +102,10 @@ def send_data_to_earth_2(send_socket):
     )
 
     while True:
+
+        while not config.connection_with_earth:
+            time.sleep(0.1)
+
         if not command_queue_2.empty():
             try:
 
@@ -175,6 +185,10 @@ def send_data_to_earth_3(send_socket):
     )
 
     while True:
+
+        while not config.connection_with_earth:
+            time.sleep(0.1)
+
         if not command_queue_3.empty():
             try:
 
@@ -255,6 +269,10 @@ def send_data_to_earth_4(send_socket):
     )
 
     while True:
+
+        while not config.connection_with_earth:
+            time.sleep(0.1)
+
         if not command_queue_4.empty():
             try:
 

@@ -79,9 +79,15 @@ earth_moon = "earth_moon"
 moon_moon = "moon_moon"
 
 EARTH_BASE_HANDSHAKE_PORT = int(os.getenv("EARTH_BASE_HANDSHAKE_PORT"))
-LUNAR_ROVER_HANDSHAKE_PORT = int(os.getenv("LUNAR_ROVER_HANDSHAKE_PORT"))
+LUNAR_ROVER_HANDSHAKE_PORT_EARTH = int(os.getenv("LUNAR_ROVER_HANDSHAKE_PORT_EARTH"))
+LUNAR_ROVER_HANDSHAKE_PORT_TUNNELLER = int(
+    os.getenv("LUNAR_ROVER_HANDSHAKE_PORT_TUNNELLER")
+)
 LUNAR_TUNNELLER_HANDSHAKE_PORT = int(os.getenv("LUNAR_TUNNELLER_HANDSHAKE_PORT"))
 
 sensor_data_recv_queue = Queue()
 connection_with_rover = False
 immediately_check_connection_with_rover = False
+
+handshake_interval = 100
+handshake_timeout = 150

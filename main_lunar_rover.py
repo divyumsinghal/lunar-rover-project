@@ -48,8 +48,13 @@ recieve_video_from_tunneller_socket = socket.socket(socket.AF_INET, socket.SOCK_
 recieve_video_from_tunneller_socket.bind((LUNAR_ROVER_1_IP, ROVER_RECIEVE_VIDEO_PORT))
 
 # Handshake
-handshake_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-handshake_socket.bind((LUNAR_ROVER_1_IP, LUNAR_ROVER_HANDSHAKE_PORT))
+handshake_socket_earth = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+handshake_socket_earth.bind((LUNAR_ROVER_1_IP, LUNAR_ROVER_HANDSHAKE_PORT_EARTH))
+
+handshake_socket_tunneller = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+handshake_socket_tunneller.bind(
+    (LUNAR_ROVER_1_IP, LUNAR_ROVER_HANDSHAKE_PORT_TUNNELLER)
+)
 
 stop_event = threading.Event()
 
@@ -62,10 +67,8 @@ def main():
     threading.Thread(
         target=handshake_rover_earth,
         args=(
-            handshake_socket,
-            EARTH_BASE_IP,
-            EARTH_BASE_HANDSHAKE_PORT,
-            LUNAR_TUNNELLER_IP,
+            handshake_socket_earth,
+            handshake_socket_tunneller,
             LUNAR_TUNNELLER_HANDSHAKE_PORT,
         ),
         daemon=True,

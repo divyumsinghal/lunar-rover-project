@@ -11,6 +11,10 @@ import random
 
 def send_video_to_earth(send_socket):
     while True:
+
+        while not config.connection_with_earth:
+            time.sleep(0.1)
+
         if not video_queue.empty():
             try:
                 command = video_queue.get()

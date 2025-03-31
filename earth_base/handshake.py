@@ -14,9 +14,7 @@ def handshake_earth_rover(send_socket, lunar_rover_IP, rover_hadshake_port):
     address = (lunar_rover_IP, rover_hadshake_port)
 
     while True:
-
         try:
-
             config.connection_with_rover = secure_send_with_ack(
                 send_socket,
                 {message_type: handshake, message_data: seq_num + 1},
@@ -29,14 +27,14 @@ def handshake_earth_rover(send_socket, lunar_rover_IP, rover_hadshake_port):
             )
 
             if not config.connection_with_rover:
-                print(f"[EARTH - send_data_to_rover] Handshake failed")
+                print(f"[EARTH - handshake_earth_rover] Handshake failed")
             else:
-                print(f"[EARTH - send_data_to_rover] Handshake successful")
+                print(f"[EARTH - handshake_earth_rover] Handshake successful")
 
             if not config.immediately_check_connection_with_rover:
-                time.sleep(100)
+                time.sleep(handshake_interval)
             else:
                 config.immediately_check_connection_with_rover = False
 
         except Exception as e:
-            print(f"[ERROR send_data_to_rover] Failed to send data: {e}")
+            print(f"[ERROR handshake_earth_rover] Failed to send data: {e}")

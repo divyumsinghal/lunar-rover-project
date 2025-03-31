@@ -81,7 +81,10 @@ video_3 = "video_3"
 
 
 EARTH_BASE_HANDSHAKE_PORT = int(os.getenv("EARTH_BASE_HANDSHAKE_PORT"))
-LUNAR_ROVER_HANDSHAKE_PORT = int(os.getenv("LUNAR_ROVER_HANDSHAKE_PORT"))
+LUNAR_ROVER_HANDSHAKE_PORT_EARTH = int(os.getenv("LUNAR_ROVER_HANDSHAKE_PORT_EARTH"))
+LUNAR_ROVER_HANDSHAKE_PORT_TUNNELLER = int(
+    os.getenv("LUNAR_ROVER_HANDSHAKE_PORT_TUNNELLER")
+)
 LUNAR_TUNNELLER_HANDSHAKE_PORT = int(os.getenv("LUNAR_TUNNELLER_HANDSHAKE_PORT"))
 
 
@@ -94,3 +97,6 @@ tunneller_command_queue = Queue()
 asked_for_video = False
 connection_with_earth = False
 connection_with_tunneller = False
+
+handshake_interval = 100
+handshake_timeout = 150

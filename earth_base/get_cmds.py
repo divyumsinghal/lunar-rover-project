@@ -26,7 +26,7 @@ def start_gui(
             cmd = entry.get().strip()
             if cmd and cmd != placeholder:
                 queue.put(cmd)
-                print(f"Queued: {cmd}")
+                print(f"Queued {placeholder}: {cmd}")
                 entry.delete(0, tk.END)
 
     def add_placeholder(entry, placeholder):
