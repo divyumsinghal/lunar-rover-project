@@ -77,3 +77,6 @@ corruption_params_moon_moon = {
 
 earth_moon = "earth_moon"
 moon_moon = "moon_moon"
+
+EARTH_MOON_PACKET_LOSS_PROB = 0.05
+MOON_MOON_PACKET_LOSS_PROB = 0.01

@@ -19,6 +19,8 @@ def video_playback():
         cv2.namedWindow("Video Playback", cv2.WINDOW_NORMAL)
         cv2.resizeWindow("Video Playback", 720, 720)
 
+        grace_period = 0
+
         while True:
             try:
                 timestamp, frame_data = frame_queue.get(timeout=1)
@@ -33,8 +35,18 @@ def video_playback():
                 wait_time = max(1, int(1000 / FRAME_RATE))
                 if cv2.waitKey(wait_time) & 0xFF == ord("q"):
                     break
+
             except queue.Empty:
-                continue
+                grace_period += 1
+                if grace_period > 10:
+                    print(
+                        "[INFO] No frames received for 10 seconds, stopping playback."
+                    )
+                    break
+                else:
+                    time.sleep(1)
+                    continue
+
             except Exception as e:
                 print("[ERROR]", e)
 

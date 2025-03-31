@@ -121,9 +121,9 @@ def corrupt_packet(packet, block_size=1024, channel=earth_moon):
 
 def simulate_channel(packet, channel):
     try:
-        if (channel == earth_moon) and random.random() < 0.15:
+        if (channel == earth_moon) and random.random() < EARTH_MOON_PACKET_LOSS_PROB:
             return None
-        if (channel == moon_moon) and random.random() < 0.05:
+        if (channel == moon_moon) and random.random() < MOON_MOON_PACKET_LOSS_PROB:
             return None
 
         base_simulate_delay(channel)
