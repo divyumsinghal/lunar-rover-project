@@ -24,6 +24,9 @@ def send_data_to_earth_1(send_socket):
                         {message_data: temperature + " " + str(random.randint(-50, 50))}
                     )
                     print(f"[EARTH - send_data_to_earth] Command Queue: {command}")
+                elif command == humidity:
+                    sensor_data.update({message_data: humidity + " " + "0"})
+                    print(f"[EARTH - send_data_to_earth] Command Queue: {command}")
                 else:
                     sensor_data.update({message_data: invalid_command + " " + command})
                     print(f"[INFO send_data_to_earth] Invalid command: {command}")
@@ -70,6 +73,9 @@ def send_data_to_earth_2(send_socket):
                     sensor_data.update(
                         {message_data: temperature + " " + str(random.randint(-50, 50))}
                     )
+                    print(f"[EARTH - send_data_to_earth] Command Queue: {command}")
+                elif command == humidity:
+                    sensor_data.update({message_data: humidity + " " + "0"})
                     print(f"[EARTH - send_data_to_earth] Command Queue: {command}")
                 else:
                     sensor_data.update({message_data: invalid_command + " " + command})
@@ -118,6 +124,9 @@ def send_data_to_earth_3(send_socket):
                         {message_data: temperature + " " + str(random.randint(-50, 50))}
                     )
                     print(f"[EARTH - send_data_to_earth] Command Queue: {command}")
+                elif command == humidity:
+                    sensor_data.update({message_data: humidity + " " + "0"})
+                    print(f"[EARTH - send_data_to_earth] Command Queue: {command}")
                 else:
                     sensor_data.update({message_data: invalid_command + " " + command})
                     print(f"[INFO send_data_to_earth] Invalid command: {command}")
@@ -164,6 +173,9 @@ def send_data_to_earth_4(send_socket):
                     sensor_data.update(
                         {message_data: temperature + " " + str(random.randint(-50, 50))}
                     )
+                    print(f"[EARTH - send_data_to_earth] Command Queue: {command}")
+                elif command == humidity:
+                    sensor_data.update({message_data: humidity + " " + "0"})
                     print(f"[EARTH - send_data_to_earth] Command Queue: {command}")
                 else:
                     sensor_data.update({message_data: invalid_command + " " + command})

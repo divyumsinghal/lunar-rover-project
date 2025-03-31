@@ -43,6 +43,7 @@ cmd = "CMD"
 video = "VID"
 sens = "SENS"
 temperature = "Temperature"
+humidity = "Humidity"
 
 # Message type identifiers for packet filtering
 MSG_TYPE_COMMAND = 1
