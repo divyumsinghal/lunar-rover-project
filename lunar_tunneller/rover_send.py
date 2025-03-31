@@ -14,21 +14,19 @@ def send_data_to_rover(send_socket):
             try:
 
                 sensor_data = {
-                    message_type: sens,
+                    message_type: cmd,
                 }
 
                 command = command_queue.get()
 
                 if command == soil_moisture:
-                    sensor_data.update(
-                        {message_data: temperature + " " + str(random.randint(-50, 50))}
-                    )
+                    sensor_data.update({message_data: soil_moisture_sent + " " + "0"})
                     print(
                         f"[LUNAR TUNNELLER - send_data_to_rover] Command Queue: {command}"
                     )
                 elif command == soil_pH:
                     sensor_data.update(
-                        {message_data: humidity + " " + str(random.randint(0, 14))}
+                        {message_data: soil_pH_sent + " " + str(random.randint(0, 14))}
                     )
                     print(
                         f"[LUNAR TUNNELLER - send_data_to_rover] Command Queue: {command}"
@@ -36,7 +34,7 @@ def send_data_to_rover(send_socket):
                 elif command == soil_temp:
                     sensor_data.update(
                         {
-                            message_data: soil_conductivity
+                            message_data: soil_temp_sent
                             + " "
                             + str(random.randint(0, 100))
                         }
@@ -47,7 +45,7 @@ def send_data_to_rover(send_socket):
                 elif command == soil_conductivity:
                     sensor_data.update(
                         {
-                            message_data: soil_moisture
+                            message_data: soil_conductivity_sent
                             + " "
                             + str(random.randint(0, 100))
                         }
@@ -61,7 +59,7 @@ def send_data_to_rover(send_socket):
 
                 send_socket.settimeout(wait_time)
                 seq_num = random.randint(1, 1000000)
-                address = (EARTH_BASE_IP, EARTH_SEND_DATA_PORT_1)
+                address = (LUNAR_ROVER_1_IP, EARTH_RECEIVE_CMD_PORT_1)
 
                 threading.Thread(
                     target=secure_send_with_ack,

@@ -35,11 +35,12 @@ receive_data_from_earth_socket_3.bind((LUNAR_ROVER_1_IP, EARTH_RECEIVE_CMD_PORT_
 receive_data_from_earth_socket_4 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 receive_data_from_earth_socket_4.bind((LUNAR_ROVER_1_IP, EARTH_RECEIVE_CMD_PORT_4))
 
+# Sending Messages to tunneller
+send_data_to_tunneller_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 # Sending video to Earth Base
 send_video_to_earth_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 send_video_to_earth_socket.bind((LUNAR_ROVER_1_IP, SEND_VIDEO_PORT))
-
 
 # Recieving video from tunneller
 recieve_video_from_tunneller_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

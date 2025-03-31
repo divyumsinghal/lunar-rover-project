@@ -17,6 +17,9 @@ def send_data_to_earth_1(send_socket):
                     message_type: sens,
                 }
 
+                send_socket.settimeout(wait_time)
+                seq_num = random.randint(1, 1000000)
+
                 command = command_queue_1.get()
 
                 if command == temperature:
@@ -27,12 +30,45 @@ def send_data_to_earth_1(send_socket):
                 elif command == humidity:
                     sensor_data.update({message_data: humidity + " " + "0"})
                     print(f"[EARTH - send_data_to_earth] Command Queue: {command}")
+                elif command in [
+                    soil_temp,
+                    soil_conductivity,
+                    soil_moisture,
+                    soil_pH,
+                ]:
+                    command_data = {
+                        message_type: cmd,
+                        message_data: command,
+                    }
+                    address = (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECV_CMD_PORT)
+
+                    threading.Thread(
+                        target=secure_send_with_ack,
+                        args=(
+                            send_socket,
+                            command_data,
+                            address,
+                            retries,
+                            wait_time,
+                            seq_num,
+                            MSG_TYPE_SENSOR,
+                            moon_moon,
+                        ),
+                        daemon=True,
+                    ).start()
+
+                    continue
+                elif command[:22] in [
+                    soil_temp_sent,
+                    soil_conductivity_sent,
+                    soil_moisture_sent,
+                    soil_pH_sent,
+                ]:
+                    sensor_data.update({message_data: command})
                 else:
                     sensor_data.update({message_data: invalid_command + " " + command})
                     print(f"[INFO send_data_to_earth] Invalid command: {command}")
 
-                send_socket.settimeout(wait_time)
-                seq_num = random.randint(1, 1000000)
                 address = (EARTH_BASE_IP, EARTH_SEND_DATA_PORT_1)
 
                 threading.Thread(
@@ -84,11 +120,28 @@ def send_data_to_earth_2(send_socket):
                     soil_moisture,
                     soil_pH,
                 ]:
-                    sensor_data.update(
-                        {message_data: command + " " + str(random.randint(0, 100))}
-                    )
-                    print(f"[EARTH - send_data_to_earth] Command Queue: {command}")
+                    command_data = {
+                        message_type: cmd,
+                        message_data: command,
+                    }
+                    address = (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECV_CMD_PORT)
 
+                    threading.Thread(
+                        target=secure_send_with_ack,
+                        args=(
+                            send_socket,
+                            command_data,
+                            address,
+                            retries,
+                            wait_time,
+                            seq_num,
+                            MSG_TYPE_SENSOR,
+                            moon_moon,
+                        ),
+                        daemon=True,
+                    ).start()
+
+                    continue
                 else:
                     sensor_data.update({message_data: invalid_command + " " + command})
                     print(f"[INFO send_data_to_earth] Invalid command: {command}")
@@ -139,6 +192,36 @@ def send_data_to_earth_3(send_socket):
                 elif command == humidity:
                     sensor_data.update({message_data: humidity + " " + "0"})
                     print(f"[EARTH - send_data_to_earth] Command Queue: {command}")
+
+                elif command in [
+                    soil_temp,
+                    soil_conductivity,
+                    soil_moisture,
+                    soil_pH,
+                ]:
+                    command_data = {
+                        message_type: cmd,
+                        message_data: command,
+                    }
+                    address = (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECV_CMD_PORT)
+
+                    threading.Thread(
+                        target=secure_send_with_ack,
+                        args=(
+                            send_socket,
+                            command_data,
+                            address,
+                            retries,
+                            wait_time,
+                            seq_num,
+                            MSG_TYPE_SENSOR,
+                            moon_moon,
+                        ),
+                        daemon=True,
+                    ).start()
+
+                    continue
+
                 else:
                     sensor_data.update({message_data: invalid_command + " " + command})
                     print(f"[INFO send_data_to_earth] Invalid command: {command}")
@@ -189,6 +272,36 @@ def send_data_to_earth_4(send_socket):
                 elif command == humidity:
                     sensor_data.update({message_data: humidity + " " + "0"})
                     print(f"[EARTH - send_data_to_earth] Command Queue: {command}")
+
+                elif command in [
+                    soil_temp,
+                    soil_conductivity,
+                    soil_moisture,
+                    soil_pH,
+                ]:
+                    command_data = {
+                        message_type: cmd,
+                        message_data: command,
+                    }
+                    address = (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECV_CMD_PORT)
+
+                    threading.Thread(
+                        target=secure_send_with_ack,
+                        args=(
+                            send_socket,
+                            command_data,
+                            address,
+                            retries,
+                            wait_time,
+                            seq_num,
+                            MSG_TYPE_SENSOR,
+                            moon_moon,
+                        ),
+                        daemon=True,
+                    ).start()
+
+                    continue
+
                 else:
                     sensor_data.update({message_data: invalid_command + " " + command})
                     print(f"[INFO send_data_to_earth] Invalid command: {command}")

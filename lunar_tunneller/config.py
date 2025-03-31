@@ -54,6 +54,12 @@ soil_pH = "Soil pH"
 soil_temp = "Soil Temperature"
 soil_conductivity = "Soil Conductivity"
 
+soil_moisture_sent = "Soil Moisture Sent    "
+soil_pH_sent = "Soil pH Sent          "
+soil_temp_sent = "Soil Temperature Sent "
+soil_conductivity_sent = "Soil Conductivity Sent"
+
+
 # Message type identifiers for packet filtering
 MSG_TYPE_COMMAND = 1
 MSG_TYPE_ACK = 2
