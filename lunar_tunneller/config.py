@@ -8,8 +8,6 @@ load_dotenv(
     override=False,
 )
 
-LUNAR_TUNNELLER_IP = os.getenv("LUNAR_TUNNELLER_IP")
-
 EARTH_BASE_IP = os.getenv("EARTH_BASE_IP")
 LUNAR_ROVER_1_IP = os.getenv("LUNAR_ROVER_1_IP")
 
@@ -28,7 +26,8 @@ VIDEO_PATH = os.path.join(os.path.dirname(__file__), "Video.mp4")
 SEND_VIDEO_PORT = int(os.getenv("SEND_VIDEO_PORT"))
 SECRET_KEY = os.getenv("SECRET_KEY").encode()
 
-LUNAR_TUNNELLER_RECEIVE_CMD_PORT = int(os.getenv("LUNAR_TUNNELLER_RECV_CMD_PORT"))
+LUNAR_TUNNELLER_IP = os.getenv("LUNAR_TUNNELLER_IP")
+LUNAR_TUNNELLER_RECV_CMD_PORT = int(os.getenv("LUNAR_TUNNELLER_RECV_CMD_PORT"))
 
 TO_ROVER_TUNNELLER_SEND_DATA_PORT = int(os.getenv("TO_ROVER_TUNNELLER_SEND_DATA_PORT"))
 

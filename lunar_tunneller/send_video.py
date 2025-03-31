@@ -58,7 +58,7 @@ def send_video_to_rover(send_socket):
 
                         if frames_sent % 100 == 0:
                             print(
-                                f"[ROVER - SEND] Sent frame {frames_sent} to Earth Base"
+                                f"[ROVER - SEND] Sent frame {frames_sent} to LUNAR ROVER"
                             )
 
                     except Exception:

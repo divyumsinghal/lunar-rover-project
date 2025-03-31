@@ -93,6 +93,14 @@ def send_video_to_earth(send_socket):
 
                 elif command == video_2:
 
+                    send_data = {
+                        message_type: video,
+                    }
+
+                    send_data.update({message_data: video_2})
+
+                    config.asked_for_video = True
+
                     send_socket.settimeout(wait_time)
                     seq_num = random.randint(1, 1000000)
                     address = (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECV_CMD_PORT)
@@ -101,7 +109,7 @@ def send_video_to_earth(send_socket):
                         target=secure_send_with_ack,
                         args=(
                             send_socket,
-                            video_2,
+                            send_data,
                             address,
                             retries,
                             wait_time,
@@ -111,8 +119,6 @@ def send_video_to_earth(send_socket):
                         ),
                         daemon=True,
                     ).start()
-
-                    config.asked_for_video = True
 
             except Exception:
                 continue

@@ -1,22 +1,19 @@
 import threading
 import socket
-from lunar_tunneller.rover_receive import receive_data_from_rover
+from lunar_tunneller.tunneller_receive import receive_data_from_rover
 from lunar_tunneller.rover_send import send_data_to_rover
 from lunar_tunneller.send_video import send_video_to_rover
 from lunar_tunneller.config import *
 
-# Sending data to Earth Base
+# Sending data to Lunar Rover
 send_data_to_lunar_rover_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-# Receiving data from Earth Base
+# Receiving data from Lunar Rover
 receive_data_from_rover_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-receive_data_from_rover_socket.bind(
-    (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECEIVE_CMD_PORT)
-)
+receive_data_from_rover_socket.bind((LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECV_CMD_PORT))
 
-# Sending video to Earth Base
+# Sending video to Lunar Rover
 video_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-video_socket.bind((LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_SEND_VIDEO_PORT))
 
 
 stop_event = threading.Event()
@@ -24,7 +21,7 @@ stop_event = threading.Event()
 
 def main():
 
-    print(f"[LUNAR ROVER] : Initiating Communication With EARTH BASE")
+    print(f"[LUNAR TUNNELLER] : Initiating Communication With Lunar Rover")
 
     # Receiving data from Rover
     threading.Thread(

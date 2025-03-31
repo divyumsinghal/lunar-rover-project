@@ -14,6 +14,7 @@ from lunar_rover.earth_send import (
     send_data_to_earth_4,
 )
 from lunar_rover.send_video import send_video_to_earth
+from lunar_rover.recieve_video import receive_video_from_tunneller_1
 
 # Sending data to Earth Base
 send_data_to_earth_socket_1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -36,8 +37,13 @@ receive_data_from_earth_socket_4.bind((LUNAR_ROVER_1_IP, EARTH_RECEIVE_CMD_PORT_
 
 
 # Sending video to Earth Base
-video_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-video_socket.bind((LUNAR_ROVER_1_IP, SEND_VIDEO_PORT))
+send_video_to_earth_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+send_video_to_earth_socket.bind((LUNAR_ROVER_1_IP, SEND_VIDEO_PORT))
+
+
+# Recieving video from tunneller
+recieve_video_from_tunneller_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+recieve_video_from_tunneller_socket.bind((LUNAR_ROVER_1_IP, ROVER_RECIEVE_VIDEO_PORT))
 
 
 stop_event = threading.Event()
@@ -91,7 +97,14 @@ def main():
 
     # Send video to Earth Base
     threading.Thread(
-        target=send_video_to_earth, args=(video_socket,), daemon=True
+        target=send_video_to_earth, args=(send_video_to_earth_socket,), daemon=True
+    ).start()
+
+    # recieve video from tunneller and forward to Earth Base
+    threading.Thread(
+        target=receive_video_from_tunneller_1,
+        args=(recieve_video_from_tunneller_socket, send_video_to_earth_socket),
+        daemon=True,
     ).start()
 
     try:

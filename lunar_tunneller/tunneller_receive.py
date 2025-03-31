@@ -6,18 +6,21 @@ from utils.client_server_comm import secure_send, secure_receive
 
 def receive_data_from_rover(recv_socket):
     print(
-        f"[LUNAR TUNNELLER - RECEIVE] Listening on port {LUNAR_TUNNELLER_RECEIVE_CMD_PORT}"
+        f"[LUNAR TUNNELLER - RECEIVE] Listening on port {LUNAR_TUNNELLER_RECV_CMD_PORT}"
     )
 
     while True:
         try:
             seq_num, data_bytes, addr = secure_receive(recv_socket)
             print(
-                f"[LUNAR TUNNELLER - RECEIVE] Receiving on port {LUNAR_TUNNELLER_RECEIVE_CMD_PORT}"
+                f"[LUNAR TUNNELLER - RECEIVE] Receiving on port {LUNAR_TUNNELLER_RECV_CMD_PORT}"
             )
 
             if data_bytes:
                 message = msgpack.unpackb(data_bytes, raw=False)
+
+                print(f"[LUNAR TUNNELLER - RECEIVE] Received data: {message}")
+
                 recieved_type = message.get(message_type)
                 payload = message.get(message_data)
                 print(f"[EARTH COMM - INCOMING] {recieved_type}: {payload}")
@@ -51,4 +54,6 @@ def receive_data_from_rover(recv_socket):
                 )
 
         except Exception as e:
-            print(f"[ERROR receive_data_from_earth] Failed to receive data: {e}")
+            print(
+                f"[ERROR LUNAR TUNNELLER receive_data_from_rover] Failed to receive data: {e}"
+            )

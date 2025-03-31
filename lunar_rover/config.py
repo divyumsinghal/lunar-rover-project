@@ -75,3 +75,4 @@ moon_moon = "moon_moon"
 
 
 tunneller_command_queue = Queue()
+asked_for_video = False
