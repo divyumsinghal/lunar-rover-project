@@ -69,6 +69,8 @@ MSG_TYPE_COMMAND = 1
 MSG_TYPE_ACK = 2
 MSG_TYPE_VIDEO = 3
 MSG_TYPE_SENSOR = 4
+MSG_TYPE_HANDSHAKE = 5
+
 
 earth_moon = "earth_moon"
 moon_moon = "moon_moon"

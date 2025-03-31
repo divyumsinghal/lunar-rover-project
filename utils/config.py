@@ -17,6 +17,7 @@ MSG_TYPE_COMMAND = 1
 MSG_TYPE_ACK = 2
 MSG_TYPE_VIDEO = 3
 MSG_TYPE_SENSOR = 4
+MSG_TYPE_HANDSHAKE = 5
 
 video_1 = "video_1"
 video_2 = "video_2"

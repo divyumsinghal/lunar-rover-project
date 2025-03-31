@@ -45,6 +45,7 @@ video = "VID"
 sens = "SENS"
 temperature = "Temperature"
 humidity = "Humidity"
+handshake = "Handshake"
 
 soil_moisture = "Soil Moisture"
 soil_pH = "Soil pH"
@@ -60,6 +61,7 @@ MSG_TYPE_COMMAND = 1
 MSG_TYPE_ACK = 2
 MSG_TYPE_VIDEO = 3
 MSG_TYPE_SENSOR = 4
+MSG_TYPE_HANDSHAKE = 5
 
 video_queue = Queue()
 video_1 = "video_1"
@@ -81,3 +83,5 @@ LUNAR_ROVER_HANDSHAKE_PORT = int(os.getenv("LUNAR_ROVER_HANDSHAKE_PORT"))
 LUNAR_TUNNELLER_HANDSHAKE_PORT = int(os.getenv("LUNAR_TUNNELLER_HANDSHAKE_PORT"))
 
 sensor_data_recv_queue = Queue()
+connection_with_rover = False
+immediately_check_connection_with_rover = False

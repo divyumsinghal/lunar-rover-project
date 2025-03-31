@@ -1,5 +1,4 @@
-import socket
-import msgpack
+import time
 import threading
 import random
 from earth_base.config import *
@@ -13,6 +12,10 @@ def send_data_to_rover_1(send_socket):
     )
 
     while True:
+
+        while not config.connection_with_rover:
+            time.sleep(0.1)
+
         if not command_queue_1.empty() or not video_queue.empty():
             try:
 
@@ -58,6 +61,10 @@ def send_data_to_rover_2(send_socket):
     )
 
     while True:
+
+        while not config.connection_with_rover:
+            time.sleep(0.1)
+
         if not command_queue_2.empty():
             try:
 
@@ -96,6 +103,10 @@ def send_data_to_rover_3(send_socket):
     )
 
     while True:
+
+        while not config.connection_with_rover:
+            time.sleep(0.1)
+
         if not command_queue_3.empty():
             try:
 
@@ -134,6 +145,10 @@ def send_data_to_rover_4(send_socket):
     )
 
     while True:
+
+        while not config.connection_with_rover:
+            time.sleep(0.1)
+
         if not command_queue_4.empty():
             try:
 

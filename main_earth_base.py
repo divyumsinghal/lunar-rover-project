@@ -18,6 +18,7 @@ from earth_base.recieve_video import (
     receive_video_from_rover_2,
     receive_video_from_rover_3,
 )
+from earth_base.handshake import handshake_earth_rover
 from earth_base.config import *
 from earth_base.video_player import video_playback
 
@@ -56,12 +57,23 @@ video_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 video_socket.bind((EARTH_BASE_IP, VIDEO_PORT))
 print(f"[INFO] Video receive socket bound to {video_socket.getsockname()}")
 
+# Handshake
+handshake_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+handshake_socket.bind((EARTH_BASE_IP, EARTH_BASE_HANDSHAKE_PORT))
+
 stop_event = threading.Event()
 
 
 def main():
 
     print(f"[EARTH BASE] : Initiating Communication With Rover")
+
+    # Handshake with rover
+    threading.Thread(
+        target=handshake_earth_rover,
+        args=(handshake_socket, LUNAR_ROVER_1_IP, LUNAR_ROVER_HANDSHAKE_PORT),
+        daemon=True,
+    ).start()
 
     # Receiving data from rover
     threading.Thread(

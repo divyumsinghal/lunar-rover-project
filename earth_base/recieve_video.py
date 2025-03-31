@@ -11,6 +11,10 @@ def receive_video_from_rover_1(recv_socket):
     recv_socket.settimeout(None)
 
     print("[INFO] Waiting for video request to be sent to rover...")
+
+    while not config.connection_with_rover:
+        time.sleep(0.1)
+
     while not config.asked_for_video:
         time.sleep(0.5)
 
@@ -51,6 +55,10 @@ def receive_video_from_rover_2(recv_socket):
     recv_socket.settimeout(None)
 
     print("[INFO] Waiting for video request to be sent to rover...")
+
+    while not config.connection_with_rover:
+        time.sleep(0.1)
+
     while not config.asked_for_video:
         time.sleep(0.5)
 
@@ -91,6 +99,10 @@ def receive_video_from_rover_3(recv_socket):
     recv_socket.settimeout(None)
 
     print("[INFO] Waiting for video request to be sent to rover...")
+
+    while not config.connection_with_rover:
+        time.sleep(0.1)
+
     while not config.asked_for_video:
         time.sleep(0.5)
 

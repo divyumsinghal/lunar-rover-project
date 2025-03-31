@@ -50,7 +50,7 @@ video = "VID"
 sens = "SENS"
 temperature = "Temperature"
 humidity = "Humidity"
-
+handshake = "Handshake"
 
 soil_moisture = "Soil Moisture"
 soil_pH = "Soil pH"
@@ -68,11 +68,11 @@ MSG_TYPE_COMMAND = 1
 MSG_TYPE_ACK = 2
 MSG_TYPE_VIDEO = 3
 MSG_TYPE_SENSOR = 4
+MSG_TYPE_HANDSHAKE = 5
 
 SECRET_KEY_EARTH_ROVER = os.getenv("SECRET_KEY_EARTH_ROVER").encode()
 SECRET_KEY_ROVER_TUNNELLER = os.getenv("SECRET_KEY_ROVER_TUNNELLER").encode()
 SECRET_KEY_ROVER_EXTERNAL = os.getenv("SECRET_KEY_ROVER_EXTERNAL").encode()
-
 
 video_queue = Queue()
 video_1 = "video_1"
@@ -92,3 +92,5 @@ video_to_send = {}
 
 tunneller_command_queue = Queue()
 asked_for_video = False
+connection_with_earth = False
+connection_with_tunneller = False

@@ -13,6 +13,7 @@ from lunar_rover.earth_send import (
     send_data_to_earth_3,
     send_data_to_earth_4,
 )
+from lunar_rover.handshake import handshake_rover_earth
 from lunar_rover.send_video import send_video_to_earth
 from lunar_rover.recieve_video import receive_video_from_tunneller_1
 
@@ -46,6 +47,9 @@ send_video_to_earth_socket.bind((LUNAR_ROVER_1_IP, SEND_VIDEO_PORT))
 recieve_video_from_tunneller_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 recieve_video_from_tunneller_socket.bind((LUNAR_ROVER_1_IP, ROVER_RECIEVE_VIDEO_PORT))
 
+# Handshake
+handshake_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+handshake_socket.bind((LUNAR_ROVER_1_IP, LUNAR_ROVER_HANDSHAKE_PORT))
 
 stop_event = threading.Event()
 
@@ -53,6 +57,19 @@ stop_event = threading.Event()
 def main():
 
     print(f"[LUNAR ROVER] : Initiating Communication With EARTH BASE")
+
+    # Handshake with EARTH_BASE & LUNAR_TUNNELLER
+    threading.Thread(
+        target=handshake_rover_earth,
+        args=(
+            handshake_socket,
+            EARTH_BASE_IP,
+            EARTH_BASE_HANDSHAKE_PORT,
+            LUNAR_TUNNELLER_IP,
+            LUNAR_TUNNELLER_HANDSHAKE_PORT,
+        ),
+        daemon=True,
+    ).start()
 
     # Receiving data from Earth Base
     threading.Thread(

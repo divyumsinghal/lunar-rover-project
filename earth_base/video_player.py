@@ -13,6 +13,9 @@ def video_playback():
 
     while True:
 
+        while not config.connection_with_rover:
+            time.sleep(0.1)
+
         try:
 
             while play_frame_queue.empty():
