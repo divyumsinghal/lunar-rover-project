@@ -10,7 +10,7 @@ def video_playback():
 
     while True:
 
-        while frame_queue.empty():
+        while play_frame_queue.empty():
             time.sleep(0.1)
         print("[INFO] First frame received, starting playback")
 
@@ -23,7 +23,7 @@ def video_playback():
 
         while True:
             try:
-                timestamp, frame_data = frame_queue.get(timeout=1)
+                timestamp, frame_data = play_frame_queue.get(timeout=1)
 
                 np_arr = np.frombuffer(frame_data, dtype=np.uint8)
                 frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)

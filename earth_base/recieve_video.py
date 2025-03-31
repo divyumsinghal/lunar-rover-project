@@ -30,7 +30,7 @@ def receive_video_from_rover_1(recv_socket):
             if timestamp is not None and frame_data is not None:
 
                 try:
-                    frame_queue.put((int(timestamp), frame_data))
+                    play_frame_queue.put((int(timestamp), frame_data))
                 except Exception as e:
                     print(f"[ERROR] Failed to add frame to queue: {e}")
 
@@ -69,7 +69,7 @@ def receive_video_from_rover_2(recv_socket):
             if timestamp is not None and frame_data is not None:
 
                 try:
-                    frame_queue.put((int(timestamp), frame_data))
+                    play_frame_queue.put((int(timestamp), frame_data))
                 except Exception as e:
                     print(f"[ERROR] Failed to add frame to queue: {e}")
 
@@ -108,7 +108,7 @@ def receive_video_from_rover_3(recv_socket):
             if timestamp is not None and frame_data is not None:
 
                 try:
-                    frame_queue.put((int(timestamp), frame_data))
+                    play_frame_queue.put((int(timestamp), frame_data))
                 except Exception as e:
                     print(f"[ERROR] Failed to add frame to queue: {e}")
 
