@@ -114,6 +114,6 @@ def secure_send_with_ack(
         except socket.timeout:
             print("[WARNING] No ACK received, retrying...")
 
-        print("[secure_send_with_ack - OUTGOING] failed to send message {data}")
+    print("[secure_send_with_ack - OUTGOING] failed to send message {data}")
 
     return False
