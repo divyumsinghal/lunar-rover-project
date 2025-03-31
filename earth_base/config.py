@@ -7,9 +7,8 @@ load_dotenv(
     verbose=True,
     override=False,
 )
-
+EARTH_BASE_IP = os.getenv("EARTH_BASE_IP")
 LUNAR_ROVER_1_IP = os.getenv("LUNAR_ROVER_1_IP")
-LOCAL_IP = os.getenv("LOCAL_IP")
 
 LUNAR_ROVER_SEND_DATA_PORT = int(os.getenv("LUNAR_ROVER_SEND_DATA_PORT"))
 EARTH_RECEIVE_CMD_PORT = int(os.getenv("LUNAR_ROVER_RECEIVE_CMD_PORT"))

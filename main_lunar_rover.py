@@ -9,10 +9,10 @@ from lunar_rover.send_video import send_video_to_earth
 send_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 video_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-video_socket.bind((LOCAL_IP, SEND_VIDEO_PORT))
+video_socket.bind((LUNAR_ROVER_1_IP, SEND_VIDEO_PORT))
 
 recv_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-recv_socket.bind((LOCAL_IP, EARTH_RECEIVE_CMD_PORT))
+recv_socket.bind((LUNAR_ROVER_1_IP, EARTH_RECEIVE_CMD_PORT))
 
 stop_event = threading.Event()
 

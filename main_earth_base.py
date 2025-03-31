@@ -16,21 +16,21 @@ from earth_base.video_player import video_playback
 # from netfilterqueue import NetfilterQueue
 
 print(f"[INFO] Starting Earth Base with configuration:")
-print(f"[INFO] - Local IP: {LOCAL_IP}")
+print(f"[INFO] - Local IP: {EARTH_BASE_IP}")
 print(f"[INFO] - Rover IP: {LUNAR_ROVER_1_IP}")
 print(f"[INFO] - Command receive port: {EARTH_RECEIVE_CMD_PORT}")
 print(f"[INFO] - Video receive port: {VIDEO_PORT}")
 
 send_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-send_socket.bind((LOCAL_IP, EARTH_BASE_SEND_CMD_PORT))
+send_socket.bind((EARTH_BASE_IP, EARTH_BASE_SEND_CMD_PORT))
 print(f"[INFO] Command send socket bound to {send_socket.getsockname()}")
 
 recv_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-recv_socket.bind((LOCAL_IP, EARTH_RECEIVE_CMD_PORT))
+recv_socket.bind((EARTH_BASE_IP, EARTH_RECEIVE_CMD_PORT))
 print(f"[INFO] Command receive socket bound to {recv_socket.getsockname()}")
 
 video_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-video_socket.bind((LOCAL_IP, VIDEO_PORT))
+video_socket.bind((EARTH_BASE_IP, VIDEO_PORT))
 print(f"[INFO] Video receive socket bound to {video_socket.getsockname()}")
 
 stop_event = threading.Event()
