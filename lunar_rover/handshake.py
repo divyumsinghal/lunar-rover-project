@@ -8,16 +8,12 @@ import msgpack
 
 def handshake_rover_earth(
     recv_socket,
-    send_socket,
-    tunneller_hadshake_port,
 ):
     print(
         f"[ROVER - handshake_rover_earth] Handshaking from rover on {LUNAR_ROVER_1_IP}"
     )
 
     seq_num = 0
-    seq_num_tun = 0
-    address_tunneller = (LUNAR_TUNNELLER_IP, tunneller_hadshake_port)
     recv_socket.settimeout(handshake_timeout)
 
     while True:
@@ -65,4 +61,42 @@ def handshake_rover_earth(
             continue
 
         except Exception as e:
-            print(f"[ERROR andshake_rover_eart] Failed to send data: {e}")
+            print(f"[ERROR handshake_rover_eart] Failed to send data: {e}")
+
+
+def handshake_rover_tunneller(
+    send_socket,
+):
+    print(
+        f"[ROVER - handshake_rover_tunneller] Sending data to LUNAR_TUNNELLER_IP on port {LUNAR_TUNNELLER_IP}"
+    )
+
+    seq_num = 0
+    send_socket.settimeout(wait_time)
+    address = (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_HANDSHAKE_PORT)
+
+    while True:
+        try:
+            config.connection_with_tunneller = secure_send_with_ack(
+                send_socket,
+                {message_type: handshake, message_data: seq_num + 1},
+                address,
+                retries,
+                wait_time,
+                seq_num,
+                MSG_TYPE_HANDSHAKE,
+                moon_moon,
+            )
+
+            if not config.connection_with_tunneller:
+                print(f"[ROVER - handshake_rover_tunneller] Handshake failed")
+            else:
+                print(f"[ROVER - handshake_rover_tunneller] Handshake successful")
+
+            if not config.immediately_check_connection_with_tunneller:
+                time.sleep(handshake_interval)
+            else:
+                config.immediately_check_connection_with_tunneller = False
+
+        except Exception as e:
+            print(f"[ERROR handshake_rover_tunneller] Failed to send data: {e}")

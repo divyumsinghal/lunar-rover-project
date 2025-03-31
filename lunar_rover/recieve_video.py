@@ -12,11 +12,16 @@ def receive_video_from_tunneller_1(recv_socket, send_socket):
     print(f"[DEBUG] Video receive socket: {recv_socket.getsockname()}")
 
     try:
-        recv_socket.settimeout(20)
+        recv_socket.settimeout(wait_time)
 
         while True:
 
             print("[INFO] Waiting for video request to be sent to rover...")
+
+            while not config.connection_with_tunneller:
+                # print("[INFO] Waiting for connection with tunneller...")
+                time.sleep(0.1)
+
             while not config.asked_for_video:
                 time.sleep(0.5)
 

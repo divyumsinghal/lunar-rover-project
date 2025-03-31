@@ -100,32 +100,53 @@ def send_video_to_earth(send_socket):
 
                 elif command == video_2:
 
-                    send_data = {
-                        message_type: video,
-                    }
+                    if not config.connection_with_tunneller:
+                        threading.Thread(
+                            target=secure_send_with_ack,
+                            args=(
+                                send_socket,
+                                {
+                                    message_type: sens,
+                                    message_data: tunneller_unavailable,
+                                },
+                                (EARTH_BASE_IP, EARTH_RECEIVE_CMD_PORT_1),
+                                retries,
+                                wait_time,
+                                seq_num,
+                                MSG_TYPE_COMMAND,
+                                earth_moon,
+                            ),
+                            daemon=True,
+                        ).start()
 
-                    send_data.update({message_data: video_2})
+                    else:
 
-                    config.asked_for_video = True
+                        send_data = {
+                            message_type: video,
+                        }
 
-                    send_socket.settimeout(wait_time)
-                    seq_num = random.randint(1, 1000000)
-                    address = (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECV_CMD_PORT)
+                        send_data.update({message_data: video_2})
 
-                    threading.Thread(
-                        target=secure_send_with_ack,
-                        args=(
-                            send_socket,
-                            send_data,
-                            address,
-                            retries,
-                            wait_time,
-                            seq_num,
-                            MSG_TYPE_COMMAND,
-                            moon_moon,
-                        ),
-                        daemon=True,
-                    ).start()
+                        config.asked_for_video = True
+
+                        send_socket.settimeout(wait_time)
+                        seq_num = random.randint(1, 1000000)
+                        address = (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECV_CMD_PORT)
+
+                        threading.Thread(
+                            target=secure_send_with_ack,
+                            args=(
+                                send_socket,
+                                send_data,
+                                address,
+                                retries,
+                                wait_time,
+                                seq_num,
+                                MSG_TYPE_COMMAND,
+                                moon_moon,
+                            ),
+                            daemon=True,
+                        ).start()
 
             except Exception:
                 continue

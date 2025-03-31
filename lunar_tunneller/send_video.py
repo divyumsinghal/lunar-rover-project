@@ -3,12 +3,16 @@ import cv2
 import os
 from lunar_tunneller.config import *
 from utils.client_server_comm import secure_send
-import threading
 from multiprocessing import Process
+import lunar_tunneller.config as config
 
 
 def send_video_to_rover(send_socket):
     while True:
+        while not config.connection_with_rover:
+            # print("[send_data_to_rover - SEND] Waiting for connection with rover...")
+            time.sleep(0.5)
+
         if not video_queue.empty():
             try:
                 command = video_queue.get()

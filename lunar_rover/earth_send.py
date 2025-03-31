@@ -42,28 +42,34 @@ def send_data_to_earth_1(send_socket):
                     soil_moisture,
                     soil_pH,
                 ]:
-                    command_data = {
-                        message_type: cmd,
-                        message_data: command,
-                    }
-                    address = (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECV_CMD_PORT)
+                    if config.connection_with_tunneller:
+                        command_data = {
+                            message_type: cmd,
+                            message_data: command,
+                        }
+                        address = (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECV_CMD_PORT)
 
-                    threading.Thread(
-                        target=secure_send_with_ack,
-                        args=(
-                            send_socket,
-                            command_data,
-                            address,
-                            retries,
-                            wait_time,
-                            seq_num,
-                            MSG_TYPE_SENSOR,
-                            moon_moon,
-                        ),
-                        daemon=True,
-                    ).start()
+                        threading.Thread(
+                            target=secure_send_with_ack,
+                            args=(
+                                send_socket,
+                                command_data,
+                                address,
+                                retries,
+                                wait_time,
+                                seq_num,
+                                MSG_TYPE_SENSOR,
+                                moon_moon,
+                            ),
+                            daemon=True,
+                        ).start()
 
-                    continue
+                        continue
+                    else:
+                        sensor_data.update(
+                            {message_data: tunneller_unavailable + " " + command}
+                        )
+                        print(f"[INFO send_data_to_earth] Tunneller unavailable")
                 elif command[:22] in [
                     soil_temp_sent,
                     soil_conductivity_sent,
@@ -112,6 +118,9 @@ def send_data_to_earth_2(send_socket):
                 sensor_data = {
                     message_type: sens,
                 }
+
+                send_socket.settimeout(wait_time)
+                seq_num = random.randint(1, 1000000)
 
                 command = command_queue_2.get()
 
@@ -196,6 +205,9 @@ def send_data_to_earth_3(send_socket):
                     message_type: sens,
                 }
 
+                send_socket.settimeout(wait_time)
+                seq_num = random.randint(1, 1000000)
+
                 command = command_queue_3.get()
 
                 if command == temperature:
@@ -279,6 +291,9 @@ def send_data_to_earth_4(send_socket):
                 sensor_data = {
                     message_type: sens,
                 }
+
+                send_socket.settimeout(wait_time)
+                seq_num = random.randint(1, 1000000)
 
                 command = command_queue_4.get()
 

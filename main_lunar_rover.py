@@ -13,7 +13,7 @@ from lunar_rover.earth_send import (
     send_data_to_earth_3,
     send_data_to_earth_4,
 )
-from lunar_rover.handshake import handshake_rover_earth
+from lunar_rover.handshake import handshake_rover_earth, handshake_rover_tunneller
 from lunar_rover.send_video import send_video_to_earth
 from lunar_rover.recieve_video import receive_video_from_tunneller_1
 
@@ -66,11 +66,13 @@ def main():
     # Handshake with EARTH_BASE & LUNAR_TUNNELLER
     threading.Thread(
         target=handshake_rover_earth,
-        args=(
-            handshake_socket_earth,
-            handshake_socket_tunneller,
-            LUNAR_TUNNELLER_HANDSHAKE_PORT,
-        ),
+        args=(handshake_socket_earth,),
+        daemon=True,
+    ).start()
+
+    threading.Thread(
+        target=handshake_rover_tunneller,
+        args=(handshake_socket_tunneller,),
         daemon=True,
     ).start()
 

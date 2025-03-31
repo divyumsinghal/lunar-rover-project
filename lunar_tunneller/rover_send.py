@@ -2,6 +2,8 @@ import random
 import threading
 from lunar_tunneller.config import *
 from utils.client_server_comm import *
+import lunar_tunneller.config as config
+import time
 
 
 def send_data_to_rover(send_socket):
@@ -10,6 +12,11 @@ def send_data_to_rover(send_socket):
     )
 
     while True:
+
+        while not config.connection_with_rover:
+            # print("[send_data_to_rover - SEND] Waiting for connection with rover...")
+            time.sleep(0.5)
+
         if not command_queue.empty():
             try:
 

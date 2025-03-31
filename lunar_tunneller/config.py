@@ -52,6 +52,7 @@ sens = "SENS"
 temperature = "Temperature"
 humidity = "Humidity"
 video_2 = "video_2"
+handshake = "Handshake"
 
 soil_moisture = "Soil Moisture"
 soil_pH = "Soil pH"
@@ -71,9 +72,21 @@ MSG_TYPE_VIDEO = 3
 MSG_TYPE_SENSOR = 4
 MSG_TYPE_HANDSHAKE = 5
 
+EARTH_BASE_HANDSHAKE_PORT = int(os.getenv("EARTH_BASE_HANDSHAKE_PORT"))
+LUNAR_ROVER_HANDSHAKE_PORT_EARTH = int(os.getenv("LUNAR_ROVER_HANDSHAKE_PORT_EARTH"))
+LUNAR_ROVER_HANDSHAKE_PORT_TUNNELLER = int(
+    os.getenv("LUNAR_ROVER_HANDSHAKE_PORT_TUNNELLER")
+)
+LUNAR_TUNNELLER_HANDSHAKE_PORT = int(os.getenv("LUNAR_TUNNELLER_HANDSHAKE_PORT"))
+
+connection_with_rover = False
 
 earth_moon = "earth_moon"
 moon_moon = "moon_moon"
 
 command_queue = Queue()
 video_queue = Queue()
+
+handshake_interval = 100
+handshake_timeout = 150
+connection_with_rover = False

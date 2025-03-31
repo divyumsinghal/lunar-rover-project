@@ -1,7 +1,8 @@
 import msgpack
 from lunar_tunneller.config import *
-
 from utils.client_server_comm import secure_send, secure_receive
+import lunar_tunneller.config as config
+import time
 
 
 def receive_data_from_rover(recv_socket):
@@ -10,6 +11,11 @@ def receive_data_from_rover(recv_socket):
     )
 
     while True:
+
+        while not config.connection_with_rover:
+            # print("[send_data_to_rover - SEND] Waiting for connection with rover...")
+            time.sleep(0.5)
+
         try:
             seq_num, data_bytes, addr = secure_receive(recv_socket)
             print(
