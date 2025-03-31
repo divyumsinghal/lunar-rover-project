@@ -54,7 +54,6 @@ def send_video_to_earth(send_socket):
                             ),
                         ).start()
 
-
                         secure_send(
                             frames_sent,
                             send_socket,
@@ -80,10 +79,11 @@ def send_video_to_earth(send_socket):
 
                         frames_sent += 1
 
-                        if frames_sent % 20 == 0:
+                        if frames_sent % 100 == 0:
                             print(
                                 f"[ROVER - SEND] Sent frame {frames_sent} to Earth Base"
                             )
+
                     except Exception:
                         continue
 

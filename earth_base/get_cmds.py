@@ -2,7 +2,9 @@ import tkinter as tk
 from earth_base.config import *
 
 
-def start_gui(command_queue_1, command_queue_2, video_queue):
+def start_gui(
+    command_queue_1, command_queue_2, command_queue_3, command_queue_4, video_queue
+):
     root = tk.Tk()
     root.title("Earth Base - Command Input")
 
@@ -18,6 +20,18 @@ def start_gui(command_queue_1, command_queue_2, video_queue):
             command_queue_2.put(cmd)
             print("Queued command 2:", cmd)
             command_entry_2.delete(0, tk.END)
+
+        cmd = command_entry_3.get().strip()
+        if cmd and cmd != "Command Entry 3":
+            command_queue_3.put(cmd)
+            print("Queued command 1:", cmd)
+            command_entry_3.delete(0, tk.END)
+
+        cmd = command_entry_4.get().strip()
+        if cmd and cmd != "Command Entry 4":
+            command_queue_4.put(cmd)
+            print("Queued command 4:", cmd)
+            command_entry_4.delete(0, tk.END)
 
         video_cmd = video_entry.get().strip()
         if video_cmd and video_cmd != "Video Entry":
@@ -45,6 +59,14 @@ def start_gui(command_queue_1, command_queue_2, video_queue):
     command_entry_2 = tk.Entry(root, width=50)
     command_entry_2.pack(padx=10, pady=5)
     add_placeholder(command_entry_2, "Command Entry 2")
+
+    command_entry_3 = tk.Entry(root, width=50)
+    command_entry_3.pack(padx=10, pady=5)
+    add_placeholder(command_entry_3, "Command Entry 3")
+
+    command_entry_4 = tk.Entry(root, width=50)
+    command_entry_4.pack(padx=10, pady=5)
+    add_placeholder(command_entry_4, "Command Entry 4")
 
     video_entry = tk.Entry(root, width=50)
     video_entry.pack(padx=10, pady=5)
