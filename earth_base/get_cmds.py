@@ -24,7 +24,7 @@ def start_gui(
         cmd = command_entry_3.get().strip()
         if cmd and cmd != "Command Entry 3":
             command_queue_3.put(cmd)
-            print("Queued command 1:", cmd)
+            print("Queued command 3:", cmd)
             command_entry_3.delete(0, tk.END)
 
         cmd = command_entry_4.get().strip()
