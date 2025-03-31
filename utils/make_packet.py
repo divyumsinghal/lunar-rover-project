@@ -5,6 +5,8 @@ from utils.prevent_corruption import (
     verify_hmac,
     encode_data,
     decode_data,
+    spread_packet,
+    remake_packet,
 )
 
 
@@ -15,7 +17,11 @@ def make_packet(seq_num, data, SECRET_KEY):
         data_with_hmac = hmac_value + compressed_data
         encoded_data = encode_data(data_with_hmac)
         packet = struct.pack("!I", seq_num) + encoded_data
-        return packet
+        spreaded_packet = spread_packet(packet)
+        if spreaded_packet is None:
+            print(f"[ERROR make_packet] Failed to transpose packet {seq_num}.")
+            return None
+        return spreaded_packet
     except struct.error as e:
         print(f"[ERROR make_packet] Failed to pack sequence number: {e}")
         return None
@@ -30,8 +36,13 @@ def parse_packet(packet, SECRET_KEY):
             print("[ERROR parse_packet] Incomplete packet received.")
             return None, None
 
-        seq_num = struct.unpack("!I", packet[:4])[0]
-        encoded_data = packet[4:]
+        original_packet = remake_packet(packet)
+        if original_packet is None:
+            print("[ERROR parse_packet] Failed to remake packet.")
+            return None, None
+
+        seq_num = struct.unpack("!I", original_packet[:4])[0]
+        encoded_data = original_packet[4:]
 
         try:
             decoded_bytes = decode_data(encoded_data)
@@ -75,7 +86,7 @@ def parse_packet(packet, SECRET_KEY):
             print(f"[ERROR parse_packet] Packet {seq_num} is too short.")
             return seq_num, None
 
-        print(f"[SUCCESS] Packet {seq_num} successfully received and verified.")
+        # print(f"[SUCCESS] Packet {seq_num} successfully received and verified.")
         return seq_num, decompressed_data
     except struct.error as e:
         print(f"[ERROR parse_packet] Failed to unpack sequence number: {e}")

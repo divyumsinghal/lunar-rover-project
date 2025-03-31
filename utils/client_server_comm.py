@@ -49,9 +49,9 @@ def secure_receive(sock, packet_type=None):
                 # If no specific type is requested or types match, process the packet
                 if packet_type is None or received_type == packet_type:
                     if data is not None:
-                        print(
-                            f"[SUCCESS] Received packet {actual_seq} (type {received_type}) from {addr}."
-                        )
+                        # print(
+                        #     f"[SUCCESS] Received packet {actual_seq} (type {received_type}) from {addr}."
+                        # )
                         return actual_seq, data, addr
                     else:
                         print(
