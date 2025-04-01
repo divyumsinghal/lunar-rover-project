@@ -33,9 +33,18 @@ def verify_hmac(data, received_hmac, SECRET_KEY):
         return False
 
 
-def encode_data(data):
+def encode_data(data, chunk_size=64, parity_bytes=12):
     try:
-        return rs.encode(data)
+        rs = reedsolo.RSCodec(parity_bytes)
+        encoded_data = bytearray()
+
+        # Process data in chunks
+        for i in range(0, len(data), chunk_size):
+            chunk = data[i : i + chunk_size]
+            encoded_chunk = rs.encode(chunk)  # Adds 12 parity bytes
+            encoded_data.extend(encoded_chunk)
+
+        return bytes(encoded_data)
     except (TypeError, ValueError) as e:
         print(f"[ERROR encode_data] Invalid data for Reed-Solomon encoding: {e}")
         return None
@@ -44,14 +53,19 @@ def encode_data(data):
         return None
 
 
-def decode_data(data):
+def decode_data(data, chunk_size=64, parity_bytes=12):
     try:
-        decoded_result = rs.decode(data)
-        if isinstance(decoded_result, tuple):
-            decoded_bytes = decoded_result[0]
-        else:
-            decoded_bytes = decoded_result
-        return decoded_bytes
+        rs = reedsolo.RSCodec(parity_bytes)
+        decoded_data = bytearray()
+
+        # Process encoded data in chunks of (chunk_size + parity_bytes)
+        for i in range(0, len(data), chunk_size + parity_bytes):
+            chunk = data[i : i + chunk_size + parity_bytes]
+            decoded_chunk = rs.decode(chunk)[0]
+            decoded_data.extend(decoded_chunk)
+
+        return bytes(decoded_data)
+
     except reedsolo.ReedSolomonError as e:
         print(f"[ERROR decode_data] Reed-Solomon unable to recover data: {e}")
         return None

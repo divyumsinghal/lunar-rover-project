@@ -24,6 +24,10 @@ def receive_video_from_rover_1(recv_socket):
 
     try:
         while True:
+
+            while not config.connection_with_rover:
+                time.sleep(0.1)
+
             try:
                 timestamp, frame_data, addr = secure_receive(
                     recv_socket, packet_type=MSG_TYPE_VIDEO
@@ -68,6 +72,9 @@ def receive_video_from_rover_2(recv_socket):
 
     try:
         while True:
+
+            while not config.connection_with_rover:
+                time.sleep(0.1)
             try:
                 timestamp, frame_data, addr = secure_receive(
                     recv_socket, packet_type=MSG_TYPE_VIDEO
@@ -112,6 +119,10 @@ def receive_video_from_rover_3(recv_socket):
 
     try:
         while True:
+
+            while not config.connection_with_rover:
+                time.sleep(0.1)
+
             try:
                 timestamp, frame_data, addr = secure_receive(
                     recv_socket, packet_type=MSG_TYPE_VIDEO
@@ -172,6 +183,7 @@ def send_naks_for_video(send_sock, address):
                     addr=address,
                     packet_type=MSG_TYPE_NAK,
                     channel=earth_moon,
+                    # SECRET_KEY=SECRET_KEY_EARTH_ROVER,
                 )
         except Exception as e:
             print(f"[ERROR] Failed to send NAK: {e}")

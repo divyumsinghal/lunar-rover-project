@@ -8,6 +8,7 @@ import msgpack
 import threading
 from multiprocessing import Process
 import random
+import socket
 
 
 def send_video_to_earth(send_socket):
@@ -46,29 +47,6 @@ def send_video_to_earth(send_socket):
                         address = (EARTH_BASE_IP, EARTH_RECIEVE_VIDEO_PORT)
 
                         try:
-
-                            """
-                            threading.Thread(
-                                target=secure_send,
-                                args=(
-                                    frames_sent,
-                                    send_socket,
-                                    frame_data,
-                                    address,
-                                    MSG_TYPE_VIDEO,
-                                    earth_moon,
-                                ),
-                            ).start()
-
-                            secure_send(
-                                frames_sent,
-                                send_socket,
-                                frame_data,
-                                address,
-                                MSG_TYPE_VIDEO,
-                                earth_moon,
-                            )
-                            """
 
                             video_to_send[frames_sent] = frame_data
 
@@ -169,6 +147,7 @@ def get_nack_for_video(recv_sock):
             time.sleep(0.5)
 
         try:
+            recv_sock.settimeout(wait_time)
             seq_num, data_bytes, addr = secure_receive(recv_sock)
             if data_bytes:
                 message = msgpack.unpackb(data_bytes, raw=False)
@@ -178,14 +157,24 @@ def get_nack_for_video(recv_sock):
 
                 if recieved_type == nak:
                     # print(f"[ROVER - SEND] Received NACK for {payload}")
-                    secure_send(
-                        payload,
-                        recv_sock,
-                        video_to_send[payload],
-                        address,
-                        MSG_TYPE_VIDEO,
-                        earth_moon,
+
+                    p = Process(
+                        target=secure_send,
+                        args=(
+                            payload,
+                            recv_sock,
+                            video_to_send[payload],
+                            address,
+                            MSG_TYPE_VIDEO,
+                            earth_moon,
+                        ),
                     )
+                    p.start()
+
+        except socket.timeout:
+            # print("[send_data_to_rover - SEND] Timeout while receiving data.")
+            if p:
+                p.join()
 
         except Exception as e:
             print(f"[ERROR send_video_to_rover] Error: {e}")
