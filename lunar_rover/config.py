@@ -35,9 +35,6 @@ ROVER_RECIEVE_VIDEO_PORT = int(os.getenv("ROVER_RECIEVE_VIDEO_PORT"))
 SECRET_KEY_INTERNAL = os.getenv("SECRET_KEY_INTERNAL").encode()
 SECRET_KEY_EXTERNAL = os.getenv("SECRET_KEY_EXTERNAL").encode()
 
-P2P_SERVER_PORT = int(os.getenv("P2P_SERVER_PORT"))
-P2P_DISCOVERY_PORT = int(os.getenv("P2P_DISCOVERY_PORT"))
-P2P_CLIENT_PORT = int(os.getenv("P2P_CLIENT_PORT"))
 
 wait_time = 10
 retries = 3
@@ -71,6 +68,15 @@ soil_temp_sent = "Soil Temperature Sent "
 soil_conductivity_sent = "Soil Conductivity Sent"
 tunneller_unavailable = "Tunneller Unavailable"
 
+Total_Ionizing_Dose = "TID"
+Dose_Rate = "DR"
+Particle_Flux = "PF"
+
+Total_Ionizing_Dose_sent = "TID Sent  "
+Dose_Rate_sent = "DR Sent   "
+Particle_Flux_sent = "PF Sent   "
+hopper_unavailable = "Hopper Unavailable"
+
 # Message type identifiers for packet filtering
 MSG_TYPE_COMMAND = 1
 MSG_TYPE_ACK = 2
@@ -96,6 +102,18 @@ LUNAR_ROVER_VIDEO_NACK_PORT = int(os.getenv("LUNAR_ROVER_VIDEO_NACK_PORT"))
 
 LUNAR_TUNNELLER_VIDEO_NACK_PORT = int(os.getenv("LUNAR_TUNNELLER_VIDEO_NACK_PORT"))
 
+LUNAR_HOPPER_IP = os.getenv("LUNAR_HOPPER_IP")
+
+LUNAR_HOPPER_RECV_CMD_PORT = int(os.getenv("LUNAR_HOPPER_RECV_CMD_PORT"))
+LUNAR_ROVER_RECV_HOPPER_PORT = int(os.getenv("LUNAR_ROVER_RECV_HOPPER_PORT"))
+
+TO_ROVER_HOPPER_SEND_DATA_PORT = int(os.getenv("TO_ROVER_HOPPER_SEND_DATA_PORT"))
+
+LUNAR_HOPPER_HANDSHAKE_PORT = int(os.getenv("LUNAR_HOPPER_HANDSHAKE_PORT"))
+
+LUNAR_ROVER_HANDSHAKE_PORT_HOPPER = int(os.getenv("LUNAR_ROVER_HANDSHAKE_PORT_HOPPER"))
+LUNAR_HOPPER_VIDEO_NACK_PORT = int(os.getenv("LUNAR_HOPPER_VIDEO_NACK_PORT"))
+
 earth_moon = "earth_moon"
 moon_moon = "moon_moon"
 
@@ -107,20 +125,11 @@ connection_with_earth = False
 connection_with_tunneller = False
 immediately_check_connection_with_tunneller = False
 
+connection_with_hopper = False
+immediately_check_connection_with_hopper = False
+
 handshake_interval = 100
 handshake_timeout = 150
 
-DISCOVERY_MODE = False
-
-peer_queue = Queue()
-peersend = "PEERSEND"
-hello = "Hello"
-relay = "relay"
-#soil_sample_type = "SOIL_SAMPLE"
-rov_command = "ROV_COMMAND"
-invalid_service = "INVALID_SERVICE"
-rov_data = "ROV_DATA"
-discover = "DISCOVER" 
-
- #           ip, status
-rover_ips = {"192.168.130.87": False, "192.168.130.": False}
+tunneller_video = False
+hopper_video = False

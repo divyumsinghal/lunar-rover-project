@@ -30,7 +30,11 @@ def send_data_to_earth_1(send_socket):
 
                 if command == temperature:
                     sensor_data.update(
-                        {message_data: temperature + " " + str(random.randint(387, 397))} ## reflect realistic values
+                        {
+                            message_data: temperature
+                            + " "
+                            + str(random.randint(387, 397))
+                        }  ## reflect realistic values
                     )
                     print(f"[EARTH - send_data_to_earth] Command Queue: {command}")
                 elif command == humidity:
@@ -78,6 +82,45 @@ def send_data_to_earth_1(send_socket):
                     soil_pH_sent,
                 ]:
                     sensor_data.update({message_data: command})
+
+                elif command in [Total_Ionizing_Dose, Dose_Rate, Particle_Flux]:
+
+                    if config.connection_with_hopper:
+                        command_data = {
+                            message_type: cmd,
+                            message_data: command,
+                        }
+                        address = (LUNAR_HOPPER_IP, LUNAR_HOPPER_RECV_CMD_PORT)
+
+                        threading.Thread(
+                            target=secure_send_with_ack,
+                            args=(
+                                send_socket,
+                                command_data,
+                                address,
+                                retries,
+                                wait_time,
+                                seq_num,
+                                MSG_TYPE_SENSOR,
+                                moon_moon,
+                                SECRET_KEY_INTERNAL,
+                            ),
+                            daemon=True,
+                        ).start()
+
+                        continue
+                    else:
+                        sensor_data.update(
+                            {message_data: hopper_unavailable + " " + command}
+                        )
+                        print(f"[INFO send_data_to_earth] HOPPER unavailable")
+                elif command[:10] in [
+                    Total_Ionizing_Dose_sent,
+                    Dose_Rate_sent,
+                    Particle_Flux_sent,
+                ]:
+                    sensor_data.update({message_data: command})
+
                 else:
                     sensor_data.update({message_data: invalid_command + " " + command})
                     print(f"[INFO send_data_to_earth] Invalid command: {command}")
@@ -177,6 +220,45 @@ def send_data_to_earth_2(send_socket):
                     soil_pH_sent,
                 ]:
                     sensor_data.update({message_data: command})
+
+                elif command in [Total_Ionizing_Dose, Dose_Rate, Particle_Flux]:
+
+                    if config.connection_with_hopper:
+                        command_data = {
+                            message_type: cmd,
+                            message_data: command,
+                        }
+                        address = (LUNAR_HOPPER_IP, LUNAR_HOPPER_RECV_CMD_PORT)
+
+                        threading.Thread(
+                            target=secure_send_with_ack,
+                            args=(
+                                send_socket,
+                                command_data,
+                                address,
+                                retries,
+                                wait_time,
+                                seq_num,
+                                MSG_TYPE_SENSOR,
+                                moon_moon,
+                                SECRET_KEY_INTERNAL,
+                            ),
+                            daemon=True,
+                        ).start()
+
+                        continue
+                    else:
+                        sensor_data.update(
+                            {message_data: hopper_unavailable + " " + command}
+                        )
+                        print(f"[INFO send_data_to_earth] HOPPER unavailable")
+                elif command[:10] in [
+                    Total_Ionizing_Dose_sent,
+                    Dose_Rate_sent,
+                    Particle_Flux_sent,
+                ]:
+                    sensor_data.update({message_data: command})
+
                 else:
                     sensor_data.update({message_data: invalid_command + " " + command})
                     print(f"[INFO send_data_to_earth] Invalid command: {command}")
@@ -279,6 +361,44 @@ def send_data_to_earth_3(send_socket):
                 ]:
                     sensor_data.update({message_data: command})
 
+                elif command in [Total_Ionizing_Dose, Dose_Rate, Particle_Flux]:
+
+                    if config.connection_with_hopper:
+                        command_data = {
+                            message_type: cmd,
+                            message_data: command,
+                        }
+                        address = (LUNAR_HOPPER_IP, LUNAR_HOPPER_RECV_CMD_PORT)
+
+                        threading.Thread(
+                            target=secure_send_with_ack,
+                            args=(
+                                send_socket,
+                                command_data,
+                                address,
+                                retries,
+                                wait_time,
+                                seq_num,
+                                MSG_TYPE_SENSOR,
+                                moon_moon,
+                                SECRET_KEY_INTERNAL,
+                            ),
+                            daemon=True,
+                        ).start()
+
+                        continue
+                    else:
+                        sensor_data.update(
+                            {message_data: hopper_unavailable + " " + command}
+                        )
+                        print(f"[INFO send_data_to_earth] HOPPER unavailable")
+                elif command[:10] in [
+                    Total_Ionizing_Dose_sent,
+                    Dose_Rate_sent,
+                    Particle_Flux_sent,
+                ]:
+                    sensor_data.update({message_data: command})
+
                 else:
                     sensor_data.update({message_data: invalid_command + " " + command})
                     print(f"[INFO send_data_to_earth] Invalid command: {command}")
@@ -378,6 +498,44 @@ def send_data_to_earth_4(send_socket):
                     soil_conductivity_sent,
                     soil_moisture_sent,
                     soil_pH_sent,
+                ]:
+                    sensor_data.update({message_data: command})
+
+                elif command in [Total_Ionizing_Dose, Dose_Rate, Particle_Flux]:
+
+                    if config.connection_with_hopper:
+                        command_data = {
+                            message_type: cmd,
+                            message_data: command,
+                        }
+                        address = (LUNAR_HOPPER_IP, LUNAR_HOPPER_RECV_CMD_PORT)
+
+                        threading.Thread(
+                            target=secure_send_with_ack,
+                            args=(
+                                send_socket,
+                                command_data,
+                                address,
+                                retries,
+                                wait_time,
+                                seq_num,
+                                MSG_TYPE_SENSOR,
+                                moon_moon,
+                                SECRET_KEY_INTERNAL,
+                            ),
+                            daemon=True,
+                        ).start()
+
+                        continue
+                    else:
+                        sensor_data.update(
+                            {message_data: hopper_unavailable + " " + command}
+                        )
+                        print(f"[INFO send_data_to_earth] HOPPER unavailable")
+                elif command[:10] in [
+                    Total_Ionizing_Dose_sent,
+                    Dose_Rate_sent,
+                    Particle_Flux_sent,
                 ]:
                     sensor_data.update({message_data: command})
 

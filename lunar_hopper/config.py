@@ -51,7 +51,7 @@ video = "VID"
 sens = "SENS"
 temperature = "Temperature"
 humidity = "Humidity"
-video_2 = "video_2"
+video_3 = "video_3"
 handshake = "Handshake"
 
 soil_moisture = "Soil Moisture"
@@ -63,6 +63,15 @@ soil_moisture_sent = "Soil Moisture Sent    "
 soil_pH_sent = "Soil pH Sent          "
 soil_temp_sent = "Soil Temperature Sent "
 soil_conductivity_sent = "Soil Conductivity Sent"
+
+Total_Ionizing_Dose = "TID"
+Dose_Rate = "DR"
+Particle_Flux = "PF"
+
+Total_Ionizing_Dose_sent = "TID Sent  "
+Dose_Rate_sent = "DR Sent   "
+Particle_Flux_sent = "PF Sent   "
+hopper_unavailable = "Hopper Unavailable"
 
 
 # Message type identifiers for packet filtering
@@ -89,7 +98,6 @@ LUNAR_ROVER_RECV_HOPPER_PORT = int(os.getenv("LUNAR_ROVER_RECV_HOPPER_PORT"))
 
 TO_ROVER_HOPPER_SEND_DATA_PORT = int(os.getenv("TO_ROVER_HOPPER_SEND_DATA_PORT"))
 
-ROVER_RECIEVE_VIDEO_PORT_HOPPER = int(os.getenv("ROVER_RECIEVE_VIDEO_PORT_HOPPER"))
 LUNAR_HOPPER_HANDSHAKE_PORT = int(os.getenv("LUNAR_HOPPER_HANDSHAKE_PORT"))
 
 LUNAR_ROVER_HANDSHAKE_PORT_HOPPER = int(os.getenv("LUNAR_ROVER_HANDSHAKE_PORT_HOPPER"))

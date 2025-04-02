@@ -61,9 +61,9 @@ def parse_packet(packet, SECRET_KEY):
 
         try:
             if not verify_hmac(compressed_data, received_hmac, SECRET_KEY):
-                print(
-                    f"[ERROR verify_hmac] HMAC verification failed for packet {seq_num}. Possible tampering detected!"
-                )
+                # print(
+                #    f"[ERROR verify_hmac] HMAC verification failed for packet {seq_num}. Possible tampering detected!"
+                # )
                 return seq_num, None
         except Exception as e:
             print(

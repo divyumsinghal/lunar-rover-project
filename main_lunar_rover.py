@@ -13,7 +13,11 @@ from lunar_rover.earth_send import (
     send_data_to_earth_3,
     send_data_to_earth_4,
 )
-from lunar_rover.handshake import handshake_rover_earth, handshake_rover_tunneller
+from lunar_rover.handshake import (
+    handshake_rover_earth,
+    handshake_rover_tunneller,
+    handshake_rover_hopper,
+)
 from lunar_rover.send_video import send_video_to_earth, get_nack_for_video
 from lunar_rover.recieve_video import (
     receive_video_from_tunneller_1,
@@ -91,6 +95,12 @@ def main():
         daemon=True,
     ).start()
 
+    threading.Thread(
+        target=handshake_rover_hopper,
+        args=(handshake_socket_tunneller,),
+        daemon=True,
+    ).start()
+
     # Receiving data from Earth Base
     threading.Thread(
         target=receive_data_from_earth_1,
@@ -148,7 +158,11 @@ def main():
     # Send Naks for Video
     threading.Thread(
         target=send_naks_for_video,
-        args=(nack_socket_send, (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_VIDEO_NACK_PORT)),
+        args=(
+            nack_socket_send,
+            (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_VIDEO_NACK_PORT),
+            (LUNAR_HOPPER_IP, LUNAR_HOPPER_VIDEO_NACK_PORT),
+        ),
         daemon=True,
     ).start()
 

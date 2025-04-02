@@ -102,3 +102,42 @@ def handshake_rover_tunneller(
 
         except Exception as e:
             print(f"[ERROR handshake_rover_tunneller] Failed to send data: {e}")
+
+
+def handshake_rover_hopper(
+    send_socket,
+):
+    print(
+        f"[ROVER - handshake_rover_hopper] Sending data to LUNAR_HOPPER_IP on port {LUNAR_HOPPER_IP}"
+    )
+
+    seq_num = 0
+    send_socket.settimeout(wait_time)
+    address = (LUNAR_HOPPER_IP, LUNAR_HOPPER_HANDSHAKE_PORT)
+
+    while True:
+        try:
+            config.connection_with_hopper = secure_send_with_ack(
+                send_socket,
+                {message_type: handshake, message_data: seq_num + 1},
+                address,
+                retries,
+                wait_time,
+                seq_num,
+                MSG_TYPE_HANDSHAKE,
+                moon_moon,
+                SECRET_KEY=SECRET_KEY_INTERNAL,
+            )
+
+            if not config.connection_with_hopper:
+                print(f"[ROVER - handshake_rover_hopper] Handshake failed")
+            else:
+                print(f"[ROVER - handshake_rover_hopper] Handshake successful")
+
+            if not config.immediately_check_connection_with_hopper:
+                time.sleep(handshake_interval)
+            else:
+                config.immediately_check_connection_with_hopper = False
+
+        except Exception as e:
+            print(f"[ERROR handshake_rover_tunneller] Failed to send data: {e}")

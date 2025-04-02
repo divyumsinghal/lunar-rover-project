@@ -26,35 +26,34 @@ def send_data_to_rover(send_socket):
 
                 command = command_queue.get()
 
-                if command == soil_moisture:
-                    sensor_data.update({message_data: soil_moisture_sent + " " + "0"})
-                    print(
-                        f"[LUNAR HOPPER - send_data_to_rover] Command Queue: {command}"
-                    )
-                elif command == soil_pH:
-                    sensor_data.update(
-                        {message_data: soil_pH_sent + " " + str(random.randint(0, 14))}
-                    )
-                    print(
-                        f"[LUNAR HOPPER - send_data_to_rover] Command Queue: {command}"
-                    )
-                elif command == soil_temp:
+                if command == Total_Ionizing_Dose:
                     sensor_data.update(
                         {
-                            message_data: soil_temp_sent
+                            message_data: Total_Ionizing_Dose_sent
                             + " "
-                            + str(random.randint(0, 100))
+                            + str(random.uniform(0.01, 0.1))
                         }
                     )
                     print(
                         f"[LUNAR HOPPER - send_data_to_rover] Command Queue: {command}"
                     )
-                elif command == soil_conductivity:
+                elif command == Dose_Rate:
                     sensor_data.update(
                         {
-                            message_data: soil_conductivity_sent
+                            message_data: Dose_Rate_sent
                             + " "
-                            + str(random.randint(0, 100))
+                            + str(random.uniform(0.01, 0.1))
+                        }
+                    )
+                    print(
+                        f"[LUNAR HOPPER - send_data_to_rover] Command Queue: {command}"
+                    )
+                elif command == Particle_Flux:
+                    sensor_data.update(
+                        {
+                            message_data: Particle_Flux_sent
+                            + " "
+                            + str(random.randint(10, 1000))
                         }
                     )
                     print(

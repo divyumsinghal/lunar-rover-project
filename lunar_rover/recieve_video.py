@@ -95,6 +95,9 @@ def receive_video_from_tunneller_1(recv_socket, send_socket):
                 time.sleep(5)
                 video_to_send.clear()
 
+                config.tunneller_video = False
+                config.hopper_video = False
+
             except Exception as e:
                 print(f"[ERROR] Fatal error in video receiving: {e}")
 
@@ -107,7 +110,7 @@ def receive_video_from_tunneller_1(recv_socket, send_socket):
         traceback.print_exc()
 
 
-def send_naks_for_video(send_sock, address):
+def send_naks_for_video(send_sock, address_tunneller, adress_hopper):
     print(f"[ROVER - SEND] Listening for video on port {ROVER_RECIEVE_VIDEO_PORT}")
     print(f"[DEBUG] Video receive socket: {send_sock.getsockname()}")
 
@@ -115,7 +118,9 @@ def send_naks_for_video(send_sock, address):
 
     while True:
         time.sleep(0.5)
-        if not config.connection_with_tunneller:
+        if not (config.tunneller_video and config.connection_with_tunneller) or not (
+            config.hopper_video and config.connection_with_hopper
+        ):
             continue
 
         seq_num = random.randint(1, 1000000)
@@ -137,7 +142,7 @@ def send_naks_for_video(send_sock, address):
                     seq_num=seq_num,
                     sock=send_sock,
                     data=packed_message,
-                    addr=address,
+                    addr=address_tunneller if config.tunneller_video else adress_hopper,
                     packet_type=MSG_TYPE_NAK,
                     channel=earth_moon,
                     SECRET_KEY=SECRET_KEY_INTERNAL,

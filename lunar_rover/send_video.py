@@ -117,10 +117,68 @@ def send_video_to_earth(send_socket):
                         send_data.update({message_data: video_2})
 
                         config.asked_for_video = True
+                        config.tunneller_video = True
 
                         send_socket.settimeout(wait_time)
                         seq_num = random.randint(1, 1000000)
                         address = (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECV_CMD_PORT)
+
+                        threading.Thread(
+                            target=secure_send_with_ack,
+                            args=(
+                                send_socket,
+                                send_data,
+                                address,
+                                retries,
+                                wait_time,
+                                seq_num,
+                                MSG_TYPE_COMMAND,
+                                moon_moon,
+                                SECRET_KEY_INTERNAL,
+                            ),
+                            daemon=True,
+                        ).start()
+
+                elif command == video_3:
+
+                    print("processing video_3")
+
+                    if not config.connection_with_hopper:
+                        print("video 3 unavailable")
+
+                        threading.Thread(
+                            target=secure_send_with_ack,
+                            args=(
+                                send_socket,
+                                {
+                                    message_type: sens,
+                                    message_data: hopper_unavailable,
+                                },
+                                (EARTH_BASE_IP, EARTH_SEND_DATA_PORT_1),
+                                retries,
+                                wait_time,
+                                seq_num,
+                                MSG_TYPE_COMMAND,
+                                earth_moon,
+                                SECRET_KEY_INTERNAL,
+                            ),
+                            daemon=True,
+                        ).start()
+
+                    else:
+
+                        send_data = {
+                            message_type: video,
+                        }
+
+                        send_data.update({message_data: video_3})
+
+                        config.asked_for_video = True
+                        config.hopper_video = True
+
+                        send_socket.settimeout(wait_time)
+                        seq_num = random.randint(1, 1000000)
+                        address = (LUNAR_HOPPER_IP, LUNAR_HOPPER_RECV_CMD_PORT)
 
                         threading.Thread(
                             target=secure_send_with_ack,

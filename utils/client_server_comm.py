@@ -76,7 +76,7 @@ def secure_receive(
                 return None, None, addr
 
     except socket.timeout:
-        print("[ERROR secure_receive] Timeout while receiving data.")
+        # print("[ERROR secure_receive] Timeout while receiving data.")
         return None, None, None
     except socket.error as e:
         print(f"[ERROR secure_receive] Socket error while receiving data: {e}")

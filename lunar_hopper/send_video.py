@@ -18,7 +18,7 @@ def send_video_to_rover(send_socket):
         if not video_queue.empty():
             try:
                 command = video_queue.get()
-                if command != video_2:
+                if command != video_3:
                     continue
 
                 if not os.path.exists(VIDEO_PATH):
