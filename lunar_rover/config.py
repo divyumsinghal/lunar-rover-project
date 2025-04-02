@@ -133,3 +133,4 @@ handshake_timeout = 150
 
 tunneller_video = False
 hopper_video = False
+earth_video = False

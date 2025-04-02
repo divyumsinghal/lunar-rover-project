@@ -25,7 +25,7 @@ def video_playback():
             time.sleep(2)  # Allow some time for the buffering to be processed
 
             cv2.namedWindow("Video Playback", cv2.WINDOW_NORMAL)
-            cv2.resizeWindow("Video Playback", 720, 720)
+            cv2.resizeWindow("Video Playback", 300, 300)
 
             grace_period = 0
 

@@ -76,10 +76,10 @@ def receive_video_from_tunneller_1(recv_socket, send_socket):
 
                                 frames_sent += 1
 
-                                if frames_sent % 100 == 0:
-                                    print(
-                                        f"[ROVER - SEND] Sent frame {frames_sent} to Earth Base"
-                                    )
+                                # if frames_sent % 100 == 0:
+                                #     print(
+                                #         f"[ROVER - SEND] Sent frame {frames_sent} to Earth Base"
+                                #    )
 
                             except Exception as e:
                                 print(
