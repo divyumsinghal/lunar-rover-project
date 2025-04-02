@@ -8,14 +8,14 @@ from utils.prevent_corruption import (
     spread_packet,
     remake_packet,
 )
-from utils.security import xor_encrypt, xor_decrypt
+from utils.security import encrypt_data, decrypt_data
 from utils.config import *
 
 
 def make_packet(seq_num, data, SECRET_KEY, ENCRYPTION_KEY=ENCRYPTION_KEY_DUMMY):
     try:
         compressed_data = compress_data(data)
-        encrypted_data = xor_encrypt(compressed_data, ENCRYPTION_KEY)
+        encrypted_data = encrypt_data(compressed_data, ENCRYPTION_KEY)
         hmac_value = generate_hmac(encrypted_data, SECRET_KEY)
         data_with_hmac = hmac_value + encrypted_data
         encoded_data = encode_data(data_with_hmac)
@@ -75,7 +75,7 @@ def parse_packet(packet, SECRET_KEY, ENCRYPTION_KEY=ENCRYPTION_KEY_DUMMY):
             return seq_num, None
 
         try:
-            compressed_data = xor_decrypt(encrypted_data, ENCRYPTION_KEY)
+            compressed_data = decrypt_data(encrypted_data, ENCRYPTION_KEY)
 
             if compressed_data is None:
                 print(f"[ERROR xor_decrypt] Failed to decrypt packet {seq_num}.")

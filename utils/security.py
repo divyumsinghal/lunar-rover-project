@@ -16,7 +16,7 @@ def generate_keystream(key, length, seed=0):
         return b""
 
 
-def xor_encrypt(data, key=ENCRYPTION_KEY_DUMMY, block_size=64):
+def encrypt_data(data, key=ENCRYPTION_KEY_DUMMY, block_size=64):
     try:
         padding_len = (block_size - (len(data) % block_size)) % block_size
         padded_data = data + b"\x00" * padding_len
@@ -34,7 +34,7 @@ def xor_encrypt(data, key=ENCRYPTION_KEY_DUMMY, block_size=64):
         return b""
 
 
-def xor_decrypt(encrypted, key=ENCRYPTION_KEY_DUMMY, block_size=64):
+def decrypt_data(encrypted, key=ENCRYPTION_KEY_DUMMY, block_size=64):
     try:
         decrypted = bytearray()
         for i in range(0, len(encrypted), block_size):
