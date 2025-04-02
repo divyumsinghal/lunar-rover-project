@@ -33,7 +33,7 @@ def send_data_to_rover(send_socket):
                     )
                 elif command == soil_pH:
                     sensor_data.update(
-                        {message_data: soil_pH_sent + " " + str(random.randint(0, 14))}
+                        {message_data: soil_pH_sent + " " + str(random.randint(7, 10))}
                     )
                     print(
                         f"[LUNAR TUNNELLER - send_data_to_rover] Command Queue: {command}"
@@ -43,7 +43,7 @@ def send_data_to_rover(send_socket):
                         {
                             message_data: soil_temp_sent
                             + " "
-                            + str(random.randint(0, 100))
+                            + str(random.uniform(1e-12, 1e-8))
                         }
                     )
                     print(
