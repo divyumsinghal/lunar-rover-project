@@ -30,7 +30,7 @@ def send_data_to_earth_1(send_socket):
 
                 if command == temperature:
                     sensor_data.update(
-                        {message_data: temperature + " " + str(random.randint(-50, 50))}
+                        {message_data: temperature + " " + str(random.randint(387, 397))} ## reflect realistic values
                     )
                     print(f"[EARTH - send_data_to_earth] Command Queue: {command}")
                 elif command == humidity:
@@ -60,6 +60,7 @@ def send_data_to_earth_1(send_socket):
                                 seq_num,
                                 MSG_TYPE_SENSOR,
                                 moon_moon,
+                                SECRET_KEY_INTERNAL,
                             ),
                             daemon=True,
                         ).start()
@@ -94,6 +95,7 @@ def send_data_to_earth_1(send_socket):
                         seq_num,
                         MSG_TYPE_SENSOR,
                         earth_moon,
+                        SECRET_KEY_INTERNAL,
                     ),
                     daemon=True,
                 ).start()
@@ -139,28 +141,42 @@ def send_data_to_earth_2(send_socket):
                     soil_moisture,
                     soil_pH,
                 ]:
-                    command_data = {
-                        message_type: cmd,
-                        message_data: command,
-                    }
-                    address = (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECV_CMD_PORT)
+                    if config.connection_with_tunneller:
+                        command_data = {
+                            message_type: cmd,
+                            message_data: command,
+                        }
+                        address = (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECV_CMD_PORT)
 
-                    threading.Thread(
-                        target=secure_send_with_ack,
-                        args=(
-                            send_socket,
-                            command_data,
-                            address,
-                            retries,
-                            wait_time,
-                            seq_num,
-                            MSG_TYPE_SENSOR,
-                            moon_moon,
-                        ),
-                        daemon=True,
-                    ).start()
+                        threading.Thread(
+                            target=secure_send_with_ack,
+                            args=(
+                                send_socket,
+                                command_data,
+                                address,
+                                retries,
+                                wait_time,
+                                seq_num,
+                                MSG_TYPE_SENSOR,
+                                moon_moon,
+                                SECRET_KEY_INTERNAL,
+                            ),
+                            daemon=True,
+                        ).start()
 
-                    continue
+                        continue
+                    else:
+                        sensor_data.update(
+                            {message_data: tunneller_unavailable + " " + command}
+                        )
+                        print(f"[INFO send_data_to_earth] Tunneller unavailable")
+                elif command[:22] in [
+                    soil_temp_sent,
+                    soil_conductivity_sent,
+                    soil_moisture_sent,
+                    soil_pH_sent,
+                ]:
+                    sensor_data.update({message_data: command})
                 else:
                     sensor_data.update({message_data: invalid_command + " " + command})
                     print(f"[INFO send_data_to_earth] Invalid command: {command}")
@@ -180,6 +196,7 @@ def send_data_to_earth_2(send_socket):
                         seq_num,
                         MSG_TYPE_SENSOR,
                         earth_moon,
+                        SECRET_KEY_INTERNAL,
                     ),
                     daemon=True,
                 ).start()
@@ -225,28 +242,42 @@ def send_data_to_earth_3(send_socket):
                     soil_moisture,
                     soil_pH,
                 ]:
-                    command_data = {
-                        message_type: cmd,
-                        message_data: command,
-                    }
-                    address = (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECV_CMD_PORT)
+                    if config.connection_with_tunneller:
+                        command_data = {
+                            message_type: cmd,
+                            message_data: command,
+                        }
+                        address = (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECV_CMD_PORT)
 
-                    threading.Thread(
-                        target=secure_send_with_ack,
-                        args=(
-                            send_socket,
-                            command_data,
-                            address,
-                            retries,
-                            wait_time,
-                            seq_num,
-                            MSG_TYPE_SENSOR,
-                            moon_moon,
-                        ),
-                        daemon=True,
-                    ).start()
+                        threading.Thread(
+                            target=secure_send_with_ack,
+                            args=(
+                                send_socket,
+                                command_data,
+                                address,
+                                retries,
+                                wait_time,
+                                seq_num,
+                                MSG_TYPE_SENSOR,
+                                moon_moon,
+                                SECRET_KEY_INTERNAL,
+                            ),
+                            daemon=True,
+                        ).start()
 
-                    continue
+                        continue
+                    else:
+                        sensor_data.update(
+                            {message_data: tunneller_unavailable + " " + command}
+                        )
+                        print(f"[INFO send_data_to_earth] Tunneller unavailable")
+                elif command[:22] in [
+                    soil_temp_sent,
+                    soil_conductivity_sent,
+                    soil_moisture_sent,
+                    soil_pH_sent,
+                ]:
+                    sensor_data.update({message_data: command})
 
                 else:
                     sensor_data.update({message_data: invalid_command + " " + command})
@@ -267,6 +298,7 @@ def send_data_to_earth_3(send_socket):
                         seq_num,
                         MSG_TYPE_SENSOR,
                         earth_moon,
+                        SECRET_KEY_INTERNAL,
                     ),
                     daemon=True,
                 ).start()
@@ -312,28 +344,42 @@ def send_data_to_earth_4(send_socket):
                     soil_moisture,
                     soil_pH,
                 ]:
-                    command_data = {
-                        message_type: cmd,
-                        message_data: command,
-                    }
-                    address = (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECV_CMD_PORT)
+                    if config.connection_with_tunneller:
+                        command_data = {
+                            message_type: cmd,
+                            message_data: command,
+                        }
+                        address = (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_RECV_CMD_PORT)
 
-                    threading.Thread(
-                        target=secure_send_with_ack,
-                        args=(
-                            send_socket,
-                            command_data,
-                            address,
-                            retries,
-                            wait_time,
-                            seq_num,
-                            MSG_TYPE_SENSOR,
-                            moon_moon,
-                        ),
-                        daemon=True,
-                    ).start()
+                        threading.Thread(
+                            target=secure_send_with_ack,
+                            args=(
+                                send_socket,
+                                command_data,
+                                address,
+                                retries,
+                                wait_time,
+                                seq_num,
+                                MSG_TYPE_SENSOR,
+                                moon_moon,
+                                SECRET_KEY_INTERNAL,
+                            ),
+                            daemon=True,
+                        ).start()
 
-                    continue
+                        continue
+                    else:
+                        sensor_data.update(
+                            {message_data: tunneller_unavailable + " " + command}
+                        )
+                        print(f"[INFO send_data_to_earth] Tunneller unavailable")
+                elif command[:22] in [
+                    soil_temp_sent,
+                    soil_conductivity_sent,
+                    soil_moisture_sent,
+                    soil_pH_sent,
+                ]:
+                    sensor_data.update({message_data: command})
 
                 else:
                     sensor_data.update({message_data: invalid_command + " " + command})
@@ -354,6 +400,7 @@ def send_data_to_earth_4(send_socket):
                         seq_num,
                         MSG_TYPE_SENSOR,
                         earth_moon,
+                        SECRET_KEY_INTERNAL,
                     ),
                     daemon=True,
                 ).start()

@@ -47,6 +47,7 @@ def send_data_to_rover_1(send_socket):
                         seq_num,
                         MSG_TYPE_SENSOR,
                         earth_moon,
+                        SECRET_KEY_INTERNAL,
                     ),
                     daemon=True,
                 ).start()
@@ -89,6 +90,7 @@ def send_data_to_rover_2(send_socket):
                         seq_num,
                         MSG_TYPE_SENSOR,
                         earth_moon,
+                        SECRET_KEY_INTERNAL,
                     ),
                     daemon=True,
                 ).start()
@@ -131,6 +133,7 @@ def send_data_to_rover_3(send_socket):
                         seq_num,
                         MSG_TYPE_SENSOR,
                         earth_moon,
+                        SECRET_KEY_INTERNAL,
                     ),
                     daemon=True,
                 ).start()
@@ -173,6 +176,7 @@ def send_data_to_rover_4(send_socket):
                         seq_num,
                         MSG_TYPE_SENSOR,
                         earth_moon,
+                        SECRET_KEY_INTERNAL,
                     ),
                     daemon=True,
                 ).start()

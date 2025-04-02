@@ -60,6 +60,7 @@ print(f"[INFO] Video receive socket bound to {video_socket.getsockname()}")
 
 # Send Naks for video
 nack_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+nack_socket.bind((EARTH_BASE_IP, 0))
 
 # Handshake
 handshake_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

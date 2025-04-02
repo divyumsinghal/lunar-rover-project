@@ -15,7 +15,10 @@ def receive_data_from_earth_1(recv_socket):
             while not config.connection_with_earth:
                 time.sleep(0.1)
 
-            seq_num, data_bytes, addr = secure_receive(recv_socket)
+            seq_num, data_bytes, addr = secure_receive(
+                recv_socket,
+                SECRET_KEY=SECRET_KEY_INTERNAL,
+            )
             print(
                 f"[LUNAR ROVER - RECEIVE] Receiving on port {EARTH_RECEIVE_CMD_PORT_1}"
             )
@@ -52,6 +55,7 @@ def receive_data_from_earth_1(recv_socket):
                     addr=addr,
                     packet_type=MSG_TYPE_ACK,
                     channel=earth_moon,
+                    SECRET_KEY=SECRET_KEY_INTERNAL,
                 )
 
         except Exception as e:
@@ -67,7 +71,10 @@ def receive_data_from_earth_2(recv_socket):
             while not config.connection_with_earth:
                 time.sleep(0.1)
 
-            seq_num, data_bytes, addr = secure_receive(recv_socket)
+            seq_num, data_bytes, addr = secure_receive(
+                recv_socket,
+                SECRET_KEY=SECRET_KEY_INTERNAL,
+            )
             print(
                 f"[LUNAR ROVER - RECEIVE] Receiving on port {EARTH_RECEIVE_CMD_PORT_2}"
             )
@@ -99,6 +106,7 @@ def receive_data_from_earth_2(recv_socket):
                     addr=addr,
                     packet_type=MSG_TYPE_ACK,
                     channel=earth_moon,
+                    SECRET_KEY=SECRET_KEY_INTERNAL,
                 )
 
         except Exception as e:
@@ -114,7 +122,10 @@ def receive_data_from_earth_3(recv_socket):
             time.sleep(0.1)
 
         try:
-            seq_num, data_bytes, addr = secure_receive(recv_socket)
+            seq_num, data_bytes, addr = secure_receive(
+                recv_socket,
+                SECRET_KEY=SECRET_KEY_INTERNAL,
+            )
             print(
                 f"[LUNAR ROVER - RECEIVE] Receiving on port {EARTH_RECEIVE_CMD_PORT_3}"
             )
@@ -151,6 +162,7 @@ def receive_data_from_earth_3(recv_socket):
                     addr=addr,
                     packet_type=MSG_TYPE_ACK,
                     channel=earth_moon,
+                    SECRET_KEY=SECRET_KEY_INTERNAL,
                 )
 
         except Exception as e:
@@ -166,7 +178,10 @@ def receive_data_from_earth_4(recv_socket):
             while not config.connection_with_earth:
                 time.sleep(0.1)
 
-            seq_num, data_bytes, addr = secure_receive(recv_socket)
+            seq_num, data_bytes, addr = secure_receive(
+                recv_socket,
+                SECRET_KEY=SECRET_KEY_INTERNAL,
+            )
             print(
                 f"[LUNAR ROVER - RECEIVE] Receiving on port {EARTH_RECEIVE_CMD_PORT_4}"
             )
@@ -198,6 +213,7 @@ def receive_data_from_earth_4(recv_socket):
                     addr=addr,
                     packet_type=MSG_TYPE_ACK,
                     channel=earth_moon,
+                    SECRET_KEY=SECRET_KEY_INTERNAL,
                 )
 
         except Exception as e:

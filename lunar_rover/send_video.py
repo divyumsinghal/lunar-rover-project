@@ -19,8 +19,11 @@ def send_video_to_earth(send_socket):
 
         if not video_queue.empty():
             try:
+
                 command = video_queue.get()
                 if command == video_1:
+
+                    address = (EARTH_BASE_IP, EARTH_RECIEVE_VIDEO_PORT)
 
                     if not os.path.exists(VIDEO_PATH):
                         continue
@@ -44,7 +47,6 @@ def send_video_to_earth(send_socket):
                             continue
 
                         frame_data = buffer.tobytes()
-                        address = (EARTH_BASE_IP, EARTH_RECIEVE_VIDEO_PORT)
 
                         try:
 
@@ -59,6 +61,7 @@ def send_video_to_earth(send_socket):
                                     address,
                                     MSG_TYPE_VIDEO,
                                     earth_moon,
+                                    SECRET_KEY_INTERNAL,
                                 ),
                             )
                             p.start()
@@ -100,6 +103,7 @@ def send_video_to_earth(send_socket):
                                 seq_num,
                                 MSG_TYPE_COMMAND,
                                 earth_moon,
+                                SECRET_KEY_INTERNAL,
                             ),
                             daemon=True,
                         ).start()
@@ -129,6 +133,7 @@ def send_video_to_earth(send_socket):
                                 seq_num,
                                 MSG_TYPE_COMMAND,
                                 moon_moon,
+                                SECRET_KEY_INTERNAL,
                             ),
                             daemon=True,
                         ).start()
@@ -146,6 +151,8 @@ def get_nack_for_video(recv_sock):
             # print("[send_data_to_rover - SEND] Waiting for connection with rover...")
             time.sleep(0.5)
 
+        p = None
+
         try:
             recv_sock.settimeout(wait_time)
             seq_num, data_bytes, addr = secure_receive(recv_sock)
@@ -156,7 +163,6 @@ def get_nack_for_video(recv_sock):
                 address = (EARTH_BASE_IP, EARTH_RECIEVE_VIDEO_PORT)
 
                 if recieved_type == nak:
-                    # print(f"[ROVER - SEND] Received NACK for {payload}")
 
                     p = Process(
                         target=secure_send,
@@ -177,4 +183,5 @@ def get_nack_for_video(recv_sock):
                 p.join()
 
         except Exception as e:
-            print(f"[ERROR send_video_to_rover] Error: {e}")
+            # print(f"[ERROR send_video_to_rover] Error: {e}")
+            continue

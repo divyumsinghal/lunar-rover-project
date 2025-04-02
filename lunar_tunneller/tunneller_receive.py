@@ -57,6 +57,7 @@ def receive_data_from_rover(recv_socket):
                     addr=addr,
                     packet_type=MSG_TYPE_ACK,
                     channel=earth_moon,
+                    SECRET_KEY=SECRET_KEY_INTERNAL,
                 )
 
         except Exception as e:

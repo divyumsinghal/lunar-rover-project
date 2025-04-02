@@ -21,7 +21,7 @@ def handshake_rover_earth(
             seq_num, recv_data, addr = secure_receive(
                 recv_socket,
                 packet_type=MSG_TYPE_HANDSHAKE,
-                # SECRET_KEY=SECRET_KEY_EARTH_ROVER,
+                SECRET_KEY=SECRET_KEY_INTERNAL,
             )
 
             if recv_data is None:
@@ -53,6 +53,7 @@ def handshake_rover_earth(
                     addr=addr,
                     packet_type=MSG_TYPE_ACK,
                     channel=earth_moon,
+                    SECRET_KEY=SECRET_KEY_INTERNAL,
                 )
 
         except socket.timeout:
@@ -86,6 +87,7 @@ def handshake_rover_tunneller(
                 seq_num,
                 MSG_TYPE_HANDSHAKE,
                 moon_moon,
+                SECRET_KEY=SECRET_KEY_INTERNAL,
             )
 
             if not config.connection_with_tunneller:

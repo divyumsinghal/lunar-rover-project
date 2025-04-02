@@ -24,6 +24,7 @@ def handshake_earth_rover(send_socket, lunar_rover_IP, rover_hadshake_port):
                 seq_num,
                 MSG_TYPE_HANDSHAKE,
                 earth_moon,
+                SECRET_KEY=SECRET_KEY_INTERNAL,
             )
 
             if not config.connection_with_rover:

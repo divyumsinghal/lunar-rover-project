@@ -79,6 +79,7 @@ def send_data_to_rover(send_socket):
                         seq_num,
                         MSG_TYPE_SENSOR,
                         earth_moon,
+                        SECRET_KEY_INTERNAL,
                     ),
                     daemon=True,
                 ).start()

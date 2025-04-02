@@ -1,0 +1,191 @@
+JUMPER                                      	       [Divyum Singhal]
+Request for Comments: 9999
+Category: Experimental                                       April 2025
+
+JSON UDP Multi-Purpose Encoded Reliable Data Transfer Protocol (JUMPER)
+
+Status of This Memo
+
+   This document specifies an experimental protocol (JUMPER) for the Internet
+   community and requests discussion and suggestions for improvements.
+   Distribution of this memo is unlimited.
+
+Abstract
+
+   This document describes the JSON UDP Multi-Purpose Encoded Reliable
+   Data Transfer Protocol (JUMPER), a lightweight, reliable messaging
+   protocol built on top of UDP. JUMPER provides mechanisms for data
+   compression, integrity verification, error correction, and packet
+   spreading while supporting multiple message types including commands,
+   sensor data, video streaming, and acknowledgments. The protocol incorporates
+   a handshake mechanism for connection establishment and maintenance,
+   retransmission logic for reliability using acknowledgments (ACKs), and
+   special handling for video data using negative acknowledgments (NACKs).
+
+Table of Contents
+
+   1. Introduction
+   2. Protocol Overview
+   3. Packet Format
+   4. Message Types
+   5. Protocol Operation
+      5.1 Data Preparation
+      5.2 Packet Construction
+      5.3 Transmission and Retransmission
+      5.4 Handshake Mechanism
+      5.5 Video Streaming
+   6. Security Considerations
+   7. Implementation Notes
+   8. References
+
+1. Introduction
+
+   The JSON UDP Multi-Purpose Encoded Reliable Data Transfer Protocol
+   (JUMPER) is designed to provide a lightweight, reliable, and flexible
+   messaging framework over UDP. It addresses UDP's inherent lack of
+   reliability by incorporating retransmission, error correction, and
+   connection management while maintaining low overhead suitable for
+   real-time applications such as sensor data transmission and video
+   streaming.
+
+2. Protocol Overview
+
+   JUMPER operates over UDP and encapsulates a JSON-based payload within
+   a structured packet. The protocol includes:
+   - A 32-bit sequence number field with 4 bits reserved for packet type
+   - Data compression using zlib
+   - Integrity verification via HMAC-SHA256
+   - Error correction using Reed-Solomon encoding
+   - Packet spreading via matrix transposition
+   - A handshake mechanism for connection persistence
+   - Support for multiple message types with retransmission and NACKs
+
+3. Packet Format
+
+   The JUMPER packet is constructed as a UDP payload with the following
+   structure:
+
+   +-----------------+-----------------+-----------------+-----------------+
+   | Sequence Number |     HMAC        |    Compressed   |                 |
+   | (32 bits)       |   (256 bits)    |    Data         |   Padding       |
+   | [Type: 4 bits]  |                 | (variable)      | (variable)      |
+   | [Seq: 28 bits]  |                 |                 |                 |
+   +-----------------+-----------------+-----------------+-----------------+
+   |                 |  This part is encoded using RS    |                 |
+   +-----------------+-----------------+-----------------+-----------------+
+   |          Then transposition is applied to the entire packet           |
+   +-----------------+-----------------+-----------------+-----------------+
+
+   - Sequence Number (32 bits):
+     - Top 4 bits: Packet Type (e.g., Command, ACK, Video)
+     - Lower 28 bits: Sequence Number (randomly generated)
+   - HMAC (256 bits): HMAC-SHA256 of the compressed data
+   - Compressed Data (variable): zlib-compressed JSON payload
+   - Padding (variable): Zero bytes for matrix transposition alignment
+
+   The packet is further encoded with Reed-Solomon and transposed before
+   transmission.
+
+4. Message Types
+
+   JUMPER defines the following message type identifiers (4-bit values):
+
+   MSG_TYPE_COMMAND    = 1   # Commands (e.g., control instructions)
+   MSG_TYPE_ACK        = 2   # Acknowledgments
+   MSG_TYPE_VIDEO      = 3   # Video frames
+   MSG_TYPE_SENSOR     = 4   # Sensor data
+   MSG_TYPE_HANDSHAKE  = 5   # Handshake messages
+
+   The JSON payload includes:
+   - "Type": String identifier (e.g., "CMD", "ACK", "VID", "SENS")
+   - "Data": Message-specific data (variable format)
+
+5. Protocol Operation
+
+5.1 Data Preparation
+
+   The payload begins as a JSON object, serialized using MessagePack
+   with binary type support:
+
+      packed_data = msgpack.packb(json, use_bin_type=True)
+
+   The data is then compressed using zlib:
+
+      compressed_data = zlib.compress(packed_data)
+
+5.2 Packet Construction
+
+   a) HMAC Generation:
+      An HMAC-SHA256 is computed over the compressed data using a
+      shared SECRET_KEY:
+
+         hmac_value = hmac.new(SECRET_KEY, compressed_data,
+                              hashlib.sha256).digest()
+
+   b) Sequence Number:
+      A 32-bit combined sequence number is created:
+      - Top 4 bits: Packet type (e.g., MSG_TYPE_COMMAND)
+      - Lower 28 bits: Random sequence number for the message
+		       Timestamp for the Video
+
+         combined_seq = (packet_type << 28) | (seq_num & 0x0FFFFFFF)
+
+   c) Reed-Solomon Encoding:
+      The data (hmac_value + compressed_data) is split into 64-byte
+      chunks, each encoded with 12 parity bytes using Reed-Solomon:
+
+         rs = reedsolo.RSCodec(12)
+
+   d) Packet Spreading:
+      The packet is transposed to mitigate burst errors:
+      - Compute a matrix with rows ≈ √(length) and cols = ceil(length/rows)
+      - Pad with zeros to fit the matrix
+      - Transpose the matrix and flatten to bytes
+
+5.3 Transmission and Retransmission
+
+   - Packets are sent via UDP using sock.sendto().
+   - For non-video packets, the sender waits for an ACK up to wait_time
+     seconds. If no ACK is received, it retransmits up to 3 times before
+     giving up.
+   - Transmission occurs only after a handshake is established.
+
+5.4 Handshake Mechanism
+
+   - A handshake packet (MSG_TYPE_HANDSHAKE) is sent every
+     handshake_interval seconds to maintain the connection.
+   - The receiver deems the connection lost if no handshake is received
+     within handshake_timeout seconds.
+   - In the event that a hanshshake fail, no messages are transmitted and
+     the sending and the traffic is redirected nessacarily.
+
+5.5 Video Streaming
+
+   - Video packets (MSG_TYPE_VIDEO) do not use ACKs.
+   - The receiver periodically sends NACKs for missing frame sequence
+     numbers.
+   - The sender retransmits only the frames indicated in the NACK.
+
+6. Security Considerations
+
+   - The SECRET_KEY must be securely shared between sender and receiver.
+   - HMAC-SHA256 ensures data integrity; encryption may be added if needed.
+
+7. Implementation Notes
+
+   - The protocol assumes a persistent UDP connection between endpoints.
+   - Reed-Solomon chunk size (64 bytes) and parity (12 bytes) are tuned
+     for typical network conditions; these may be adjusted.
+
+8. References
+
+   - UDP: RFC 768, User Datagram Protocol
+        - zlib: https://zlib.net/
+        - HMAC: RFC 2104, HMAC: Keyed-Hashing for Message Authentication
+        - Reed-Solomon: https://github.com/tomerfiliba/reedsolomon
+        - MessagePack: https://msgpack.org/
+
+Author's Address
+
+  [Divyum Singhal]
+  [I am not gonna reveal my Adress]

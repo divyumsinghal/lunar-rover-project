@@ -14,7 +14,10 @@ def receive_data_from_rover_1(recv_socket):
             time.sleep(0.1)
 
         try:
-            seq_num, data_bytes, addr = secure_receive(recv_socket)
+            seq_num, data_bytes, addr = secure_receive(
+                recv_socket,
+                SECRET_KEY=SECRET_KEY_INTERNAL,
+            )
 
             print(
                 f"[EARTH COMM - RECEIVE] Recieving on port {EARTH_RECEIVE_CMD_PORT_1}"
@@ -38,6 +41,7 @@ def receive_data_from_rover_1(recv_socket):
                     addr=addr,
                     packet_type=MSG_TYPE_ACK,
                     channel=earth_moon,
+                    SECRET_KEY=SECRET_KEY_INTERNAL,
                 )
 
                 sensor_data_recv_queue.put({seq_num: payload})
@@ -55,7 +59,10 @@ def receive_data_from_rover_2(recv_socket):
             time.sleep(0.1)
 
         try:
-            seq_num, data_bytes, addr = secure_receive(recv_socket)
+            seq_num, data_bytes, addr = secure_receive(
+                recv_socket,
+                SECRET_KEY=SECRET_KEY_INTERNAL,
+            )
 
             print(
                 f"[LUNAR ROVER - RECEIVE] Recieving on port {EARTH_RECEIVE_CMD_PORT_2}"
@@ -79,6 +86,7 @@ def receive_data_from_rover_2(recv_socket):
                     addr=addr,
                     packet_type=MSG_TYPE_ACK,
                     channel=earth_moon,
+                    SECRET_KEY=SECRET_KEY_INTERNAL,
                 )
 
                 sensor_data_recv_queue.put({seq_num: payload})
@@ -96,7 +104,10 @@ def receive_data_from_rover_3(recv_socket):
             time.sleep(0.1)
 
         try:
-            seq_num, data_bytes, addr = secure_receive(recv_socket)
+            seq_num, data_bytes, addr = secure_receive(
+                recv_socket,
+                SECRET_KEY=SECRET_KEY_INTERNAL,
+            )
 
             print(
                 f"[LUNAR ROVER - RECEIVE] Recieving on port {EARTH_RECEIVE_CMD_PORT_3}"
@@ -120,6 +131,7 @@ def receive_data_from_rover_3(recv_socket):
                     addr=addr,
                     packet_type=MSG_TYPE_ACK,
                     channel=earth_moon,
+                    SECRET_KEY=SECRET_KEY_INTERNAL,
                 )
 
                 sensor_data_recv_queue.put({seq_num: payload})
@@ -137,7 +149,9 @@ def receive_data_from_rover_4(recv_socket):
             time.sleep(0.1)
 
         try:
-            seq_num, data_bytes, addr = secure_receive(recv_socket)
+            seq_num, data_bytes, addr = secure_receive(
+                recv_socket, SECRET_KEY=SECRET_KEY_INTERNAL
+            )
 
             print(
                 f"[LUNAR ROVER - RECEIVE] Recieving on port {EARTH_RECEIVE_CMD_PORT_4}"
@@ -161,6 +175,7 @@ def receive_data_from_rover_4(recv_socket):
                     addr=addr,
                     packet_type=MSG_TYPE_ACK,
                     channel=earth_moon,
+                    SECRET_KEY=SECRET_KEY_INTERNAL,
                 )
 
                 sensor_data_recv_queue.put({seq_num: payload})

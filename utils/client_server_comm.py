@@ -5,8 +5,6 @@ import socket
 import threading
 from utils.config import *
 
-SECRET_KEY_DUMMY = b"SUPER_SECRET_ROVER_KEY"
-
 
 def secure_send(
     seq_num,
@@ -17,6 +15,7 @@ def secure_send(
     channel=earth_moon,
     SECRET_KEY=SECRET_KEY_DUMMY,
 ):
+    # print(SECRET_KEY)
     try:
         # print(packet_type)
         # Add packet type to the sequence number

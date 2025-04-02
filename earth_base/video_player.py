@@ -86,8 +86,15 @@ def video_playback():
 
             # Write frames to video in order
             for i in sorted(video_to_store.keys()):
+                if video_to_store[i] is None:
+                    continue
+
                 np_arr = np.frombuffer(video_to_store[i], dtype=np.uint8)
                 frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+
+                if frame is None:
+                    continue
+
                 out.write(frame)
 
             out.release()

@@ -6,6 +6,7 @@ from utils.client_server_comm import secure_send, secure_receive
 from multiprocessing import Process
 import lunar_tunneller.config as config
 import msgpack
+import socket
 
 
 def send_video_to_rover(send_socket):
@@ -46,6 +47,8 @@ def send_video_to_rover(send_socket):
 
                     try:
 
+                        video_to_send[frames_sent] = frame_data
+
                         p = Process(
                             target=secure_send,
                             args=(
@@ -54,7 +57,8 @@ def send_video_to_rover(send_socket):
                                 frame_data,
                                 address,
                                 MSG_TYPE_VIDEO,
-                                earth_moon,
+                                moon_moon,
+                                SECRET_KEY_INTERNAL,
                             ),
                         )
                         p.start()
@@ -72,6 +76,9 @@ def send_video_to_rover(send_socket):
                 cap.release()
                 p.join()
 
+                time.sleep(5)
+                video_to_send.clear()
+
             except Exception:
                 continue
 
@@ -85,15 +92,37 @@ def get_nack_for_video(recv_sock):
             # print("[send_data_to_rover - SEND] Waiting for connection with rover...")
             time.sleep(0.5)
 
+        p = None
+
         try:
+            recv_sock.settimeout(wait_time)
             seq_num, data_bytes, addr = secure_receive(recv_sock)
             if data_bytes:
                 message = msgpack.unpackb(data_bytes, raw=False)
                 recieved_type = message.get(message_type)
-                payload = message.get(message_data)
+                payload = int(message.get(message_data))
+                address = (LUNAR_ROVER_1_IP, ROVER_RECIEVE_VIDEO_PORT)
 
                 if recieved_type == nak:
-                    print(f"[ROVER - NACK] Received NACK for video")
+
+                    p = Process(
+                        target=secure_send,
+                        args=(
+                            payload,
+                            recv_sock,
+                            video_to_send[payload],
+                            address,
+                            MSG_TYPE_VIDEO,
+                            moon_moon,
+                        ),
+                    )
+                    p.start()
+
+        except socket.timeout:
+            # print("[send_data_to_rover - SEND] Timeout while receiving data.")
+            if p:
+                p.join()
 
         except Exception as e:
-            print(f"[ERROR send_video_to_rover] Error: {e}")
+            # print(f"[ERROR send_video_to_rover] Error: {e}")
+            continue

@@ -32,9 +32,8 @@ TO_ROVER_TUNNELLER_SEND_DATA_PORT = int(os.getenv("TO_ROVER_TUNNELLER_SEND_DATA_
 
 ROVER_RECIEVE_VIDEO_PORT = int(os.getenv("ROVER_RECIEVE_VIDEO_PORT"))
 
-SECRET_KEY_EARTH_ROVER = os.getenv("SECRET_KEY_EARTH_ROVER").encode()
-SECRET_KEY_ROVER_TUNNELLER = os.getenv("SECRET_KEY_ROVER_TUNNELLER").encode()
-SECRET_KEY_ROVER_EXTERNAL = os.getenv("SECRET_KEY_ROVER_EXTERNAL").encode()
+SECRET_KEY_INTERNAL = os.getenv("SECRET_KEY_INTERNAL").encode()
+SECRET_KEY_EXTERNAL = os.getenv("SECRET_KEY_EXTERNAL").encode()
 
 
 wait_time = 10
@@ -81,7 +80,9 @@ LUNAR_ROVER_HANDSHAKE_PORT_TUNNELLER = int(
 )
 LUNAR_TUNNELLER_HANDSHAKE_PORT = int(os.getenv("LUNAR_TUNNELLER_HANDSHAKE_PORT"))
 
-connection_with_rover = False
+LUNAR_TUNNELLER_VIDEO_NACK_PORT = int(os.getenv("LUNAR_TUNNELLER_VIDEO_NACK_PORT"))
+
+video_to_send = {}
 
 earth_moon = "earth_moon"
 moon_moon = "moon_moon"

@@ -15,13 +15,21 @@ from lunar_rover.earth_send import (
 )
 from lunar_rover.handshake import handshake_rover_earth, handshake_rover_tunneller
 from lunar_rover.send_video import send_video_to_earth, get_nack_for_video
-from lunar_rover.recieve_video import receive_video_from_tunneller_1
+from lunar_rover.recieve_video import (
+    receive_video_from_tunneller_1,
+    send_naks_for_video,
+)
 
 # Sending data to Earth Base
 send_data_to_earth_socket_1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 send_data_to_earth_socket_2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 send_data_to_earth_socket_3 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 send_data_to_earth_socket_4 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+send_data_to_earth_socket_1.bind((LUNAR_ROVER_1_IP, 0))
+send_data_to_earth_socket_2.bind((LUNAR_ROVER_1_IP, 0))
+send_data_to_earth_socket_3.bind((LUNAR_ROVER_1_IP, 0))
+send_data_to_earth_socket_4.bind((LUNAR_ROVER_1_IP, 0))
 
 # Receiving data from Earth Base
 receive_data_from_earth_socket_1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -38,7 +46,7 @@ receive_data_from_earth_socket_4.bind((LUNAR_ROVER_1_IP, EARTH_RECEIVE_CMD_PORT_
 
 # Sending Messages to tunneller
 send_data_to_tunneller_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
+send_data_to_tunneller_socket.bind((LUNAR_ROVER_1_IP, 0))
 # Sending video to Earth Base
 send_video_to_earth_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 send_video_to_earth_socket.bind((LUNAR_ROVER_1_IP, SEND_VIDEO_PORT))
@@ -57,8 +65,11 @@ handshake_socket_tunneller.bind(
 )
 
 # Reciver Naks for video
-nack_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-nack_socket.bind((LUNAR_ROVER_1_IP, LUNAR_ROVER_VIDEO_NACK_PORT))
+nack_socket_recv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+nack_socket_recv.bind((LUNAR_ROVER_1_IP, LUNAR_ROVER_VIDEO_NACK_PORT))
+
+nack_socket_send = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+nack_socket_send.bind((LUNAR_ROVER_1_IP, 0))
 
 stop_event = threading.Event()
 
@@ -130,7 +141,14 @@ def main():
     # Recv Naks for Video
     threading.Thread(
         target=get_nack_for_video,
-        args=(nack_socket,),
+        args=(nack_socket_recv,),
+        daemon=True,
+    ).start()
+
+    # Send Naks for Video
+    threading.Thread(
+        target=send_naks_for_video,
+        args=(nack_socket_send, (LUNAR_TUNNELLER_IP, LUNAR_TUNNELLER_VIDEO_NACK_PORT)),
         daemon=True,
     ).start()
 

@@ -32,10 +32,12 @@ TO_ROVER_TUNNELLER_SEND_DATA_PORT = int(os.getenv("TO_ROVER_TUNNELLER_SEND_DATA_
 
 ROVER_RECIEVE_VIDEO_PORT = int(os.getenv("ROVER_RECIEVE_VIDEO_PORT"))
 
-SECRET_KEY_EARTH_ROVER = os.getenv("SECRET_KEY_EARTH_ROVER").encode()
-SECRET_KEY_ROVER_TUNNELLER = os.getenv("SECRET_KEY_ROVER_TUNNELLER").encode()
-SECRET_KEY_ROVER_EXTERNAL = os.getenv("SECRET_KEY_ROVER_EXTERNAL").encode()
+SECRET_KEY_INTERNAL = os.getenv("SECRET_KEY_INTERNAL").encode()
+SECRET_KEY_EXTERNAL = os.getenv("SECRET_KEY_EXTERNAL").encode()
 
+P2P_SERVER_PORT = int(os.getenv("P2P_SERVER_PORT"))
+P2P_DISCOVERY_PORT = int(os.getenv("P2P_DISCOVERY_PORT"))
+P2P_CLIENT_PORT = int(os.getenv("P2P_CLIENT_PORT"))
 
 wait_time = 10
 retries = 3
@@ -92,6 +94,8 @@ LUNAR_TUNNELLER_HANDSHAKE_PORT = int(os.getenv("LUNAR_TUNNELLER_HANDSHAKE_PORT")
 
 LUNAR_ROVER_VIDEO_NACK_PORT = int(os.getenv("LUNAR_ROVER_VIDEO_NACK_PORT"))
 
+LUNAR_TUNNELLER_VIDEO_NACK_PORT = int(os.getenv("LUNAR_TUNNELLER_VIDEO_NACK_PORT"))
+
 earth_moon = "earth_moon"
 moon_moon = "moon_moon"
 
@@ -105,3 +109,18 @@ immediately_check_connection_with_tunneller = False
 
 handshake_interval = 100
 handshake_timeout = 150
+
+DISCOVERY_MODE = False
+
+peer_queue = Queue()
+peersend = "PEERSEND"
+hello = "Hello"
+relay = "relay"
+#soil_sample_type = "SOIL_SAMPLE"
+rov_command = "ROV_COMMAND"
+invalid_service = "INVALID_SERVICE"
+rov_data = "ROV_DATA"
+discover = "DISCOVER" 
+
+ #           ip, status
+rover_ips = {"192.168.130.87": False, "192.168.130.": False}

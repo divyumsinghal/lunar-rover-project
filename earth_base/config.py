@@ -53,9 +53,8 @@ soil_pH = "Soil pH"
 soil_temp = "Soil Temperature"
 soil_conductivity = "Soil Conductivity"
 
-SECRET_KEY_EARTH_ROVER = os.getenv("SECRET_KEY_EARTH_ROVER").encode()
-SECRET_KEY_ROVER_TUNNELLER = os.getenv("SECRET_KEY_ROVER_TUNNELLER").encode()
-SECRET_KEY_ROVER_EXTERNAL = os.getenv("SECRET_KEY_ROVER_EXTERNAL").encode()
+SECRET_KEY_INTERNAL = os.getenv("SECRET_KEY_INTERNAL").encode()
+SECRET_KEY_EXTERNAL = os.getenv("SECRET_KEY_EXTERNAL").encode()
 
 # Message type identifiers for packet filtering
 MSG_TYPE_COMMAND = 1
