@@ -14,6 +14,7 @@ def secure_send(
     packet_type=MSG_TYPE_COMMAND,
     channel=earth_moon,
     SECRET_KEY=SECRET_KEY_DUMMY,
+    ENCRYPTION_KEY=ENCRYPTION_KEY_DUMMY,
 ):
     # print(SECRET_KEY)
     try:
@@ -22,7 +23,7 @@ def secure_send(
         combined_seq = (packet_type << 28) | (
             seq_num & 0x0FFFFFFF
         )  # Use top 4 bits for type
-        packet = make_packet(combined_seq, data, SECRET_KEY)
+        packet = make_packet(combined_seq, data, SECRET_KEY, ENCRYPTION_KEY)
 
         packet = simulate_channel(packet, channel)
 
@@ -44,11 +45,12 @@ def secure_receive(
     sock,
     packet_type=None,
     SECRET_KEY=SECRET_KEY_DUMMY,
+    ENCRYPTION_KEY=ENCRYPTION_KEY_DUMMY,
 ):
     try:
         while True:
             packet, addr = sock.recvfrom(65535)
-            seq_num, data = parse_packet(packet, SECRET_KEY)
+            seq_num, data = parse_packet(packet, SECRET_KEY, ENCRYPTION_KEY)
 
             if seq_num is not None:
                 # Extract packet type and actual sequence number
@@ -96,6 +98,7 @@ def secure_send_with_ack(
     msg_type=MSG_TYPE_COMMAND,
     channel=earth_moon,
     SECRET_KEY=SECRET_KEY_DUMMY,
+    ENCRYPTION_KEY=ENCRYPTION_KEY_DUMMY,
 ):
 
     send_socket.settimeout(wait_time)
@@ -111,6 +114,7 @@ def secure_send_with_ack(
             packet_type=msg_type,
             channel=channel,
             SECRET_KEY=SECRET_KEY,
+            ENCRYPTION_KEY=ENCRYPTION_KEY,
         )
 
         print(f"[secure_send_with_ack - OUTGOING] Attempt {attempt} Sent: {data}")
