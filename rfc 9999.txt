@@ -71,6 +71,12 @@ Table of Contents
    | [Type: 4 bits]  |                 | (variable)      | (variable)      |
    | [Seq: 28 bits]  |                 |                 |                 |
    +-----------------+-----------------+-----------------+-----------------+
+   |                 |                 |  This Part      |                 |
+   |                 |                 |  is Encrypted   |                 |
+   |                 |                 |  using a        |                 |
+   |                 |                 |  Proprietary    |                 |
+   |                 |                 |  Algorithm      |                 |
+   +-----------------+-----------------+-----------------+-----------------+
    |                 |  This part is encoded using RS    |                 |
    +-----------------+-----------------+-----------------+-----------------+
    |          Then transposition is applied to the entire packet           |
@@ -168,8 +174,10 @@ Table of Contents
 
 6. Security Considerations
 
-   - The SECRET_KEY must be securely shared between sender and receiver.
-   - HMAC-SHA256 ensures data integrity; encryption may be added if needed.
+   - The SECRET_KEY and the ENCRYPTION_KEY must be securely shared
+     between sender and receiver beforehand.
+   - HMAC-SHA256 ensures data integrity
+   - Additionay the data is encrypted using a proprietary algorithm
 
 7. Implementation Notes
 
@@ -180,10 +188,10 @@ Table of Contents
 8. References
 
    - UDP: RFC 768, User Datagram Protocol
-        - zlib: https://zlib.net/
-        - HMAC: RFC 2104, HMAC: Keyed-Hashing for Message Authentication
-        - Reed-Solomon: https://github.com/tomerfiliba/reedsolomon
-        - MessagePack: https://msgpack.org/
+   - zlib: https://zlib.net/
+   - HMAC: RFC 2104, HMAC: Keyed-Hashing for Message Authentication
+   - Reed-Solomon: https://github.com/tomerfiliba/reedsolomon
+   - MessagePack: https://msgpack.org/
 
 Author's Address
 
