@@ -96,7 +96,7 @@ def corrupt_packet(packet, block_size=1024, channel=earth_moon):
                 block_size_to_corrupt = round(
                     random.gauss(params["mean"], params["std"])
                 )
-                block_size_to_corrupt = max(1, min(block_size_to_corrupt, block_length))
+                block_size_to_corrupt = max(0, min(block_size_to_corrupt, block_length))
 
                 start_index = random.randint(0, block_length - block_size_to_corrupt)
                 for i in range(start_index, start_index + block_size_to_corrupt):
